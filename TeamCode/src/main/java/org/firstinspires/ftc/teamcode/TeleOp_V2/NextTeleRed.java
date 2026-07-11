@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 import org.firstinspires.ftc.teamcode.subsystems.SubTurret;
@@ -33,7 +33,7 @@ import dev.nextftc.hardware.impl.ServoEx;
 public class NextTeleRed extends NextFTCOpMode {
     public NextTeleRed() {
         addComponents(
-                new SubsystemComponent(SubShoot.INSTANCE, SubIntake.INSTANCE, SubTurret.INSTANCE),
+                new SubsystemComponent(SubShoot.INSTANCE, SubIntake.INSTANCE, SubTurret.INSTANCE, SubHood.INSTANCE),
                 new PedroComponent(Constants::createFollower),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
@@ -193,8 +193,8 @@ public class NextTeleRed extends NextFTCOpMode {
         }
         shootertune = -0.00000566826 * Math.pow(DISTANCETOBLUEGOAL, 4) + 0.00261338 * Math.pow(DISTANCETOBLUEGOAL, 3) - 0.425741 * Math.pow(DISTANCETOBLUEGOAL, 2) + 33.27585 * DISTANCETOBLUEGOAL + 81.24922;
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
-        SubShoot.INSTANCE.sethoodtune(HoodTune);
-        SubShoot.INSTANCE.HoodInterpolation().schedule();
+        SubHood.INSTANCE.sethoodtune(HoodTune);
+        SubHood.INSTANCE.HoodInterpolation().schedule();
         telemetry.update();
 
         if (targetVisible){

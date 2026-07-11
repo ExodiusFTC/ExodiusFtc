@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.pedroPathing.Intake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.FeedbackServoSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SubCRServo;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 import org.firstinspires.ftc.teamcode.subsystems.SubTurret;
@@ -24,11 +26,13 @@ import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.core.units.Distance;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.controllable.RunToVelocity;
 import dev.nextftc.hardware.impl.MotorEx;
+import dev.nextftc.hardware.powerable.SetPower;
 
 
 @TeleOp(name = "Telescoping Test")
@@ -42,12 +46,17 @@ public class TelescopingTest extends NextFTCOpMode {
 
     public TelescopingTest() {
         addComponents(
+                new SubsystemComponent(SubCRServo.INSTANCE, FeedbackServoSubsystem.INSTANCE),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
         );
     }
     public Command extend = new RunToPosition(controlSystem, 1700, 30).requires(this);
     public Command Hold = new RunToVelocity(controlSystem, 0, 30).requires(this);
+    public Command go1 = new SetPower(boxTube, 1).requires(this);
+    public Command stop  = new SetPower(boxTube, 0).requires(this);
+
+    public Command go2 = new SetPower(boxTube, -1).requires(this);
 
     //384.5 ticks per revolution
     // MAXIMUM THEORETICAL: 2787
@@ -58,18 +67,19 @@ public class TelescopingTest extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed(){
-
+        Gamepads.gamepad1().a()
+                .whenBecomesTrue(go1)
+                .whenBecomesFalse(stop);
+        Gamepads.gamepad1().b()
+                .whenBecomesTrue(go2)
+                .whenBecomesFalse(stop);
     }
 
     @Override
     public void onUpdate(){
-        boxTube.setPower(controlSystem.calculate(boxTube.getState()));
+        //boxTube.setPower(controlSystem.calculate(boxTube.getState()));
         telemetry.addData("Velocity", boxTube.getVelocity());
-        if (gamepad1.a){
-            extend.schedule();
-        } else {
-            Hold.schedule();
-        }
+
 
 //        if (gamepad1.a){
 //            boxTube.setPower(-1);

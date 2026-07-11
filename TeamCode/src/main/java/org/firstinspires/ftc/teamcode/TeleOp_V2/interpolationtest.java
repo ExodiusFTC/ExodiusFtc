@@ -1,36 +1,26 @@
 package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
 
-import com.arcrobotics.ftclib.command.Command;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.pedroPathing.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.MotorPIDVelocity;
+import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 import org.firstinspires.ftc.teamcode.subsystems.SubTurret;
 
 
-import java.time.Duration;
-
-import dev.nextftc.core.commands.CommandManager;
-import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.groups.ParallelGroup;
-import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
-import dev.nextftc.core.units.Angle;
 import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.extensions.pedro.PedroDriverControlled;
 import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 import dev.nextftc.hardware.driving.DriverControlledCommand;
-import dev.nextftc.hardware.driving.MecanumDriverControlled;
 import dev.nextftc.hardware.impl.MotorEx;
 
 
@@ -38,7 +28,7 @@ import dev.nextftc.hardware.impl.MotorEx;
 public class interpolationtest extends NextFTCOpMode {
     public interpolationtest() {
         addComponents(
-                new SubsystemComponent(SubShoot.INSTANCE, SubIntake.INSTANCE, SubTurret.INSTANCE),
+                new SubsystemComponent(SubShoot.INSTANCE, SubIntake.INSTANCE, SubTurret.INSTANCE, SubHood.INSTANCE),
                 new PedroComponent(Constants::createFollower),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
@@ -219,7 +209,7 @@ public class interpolationtest extends NextFTCOpMode {
 
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Distance to blue goal", DISTANCETOBLUEGOAL);
-        telemetry.addData("Hood Pos", SubShoot.INSTANCE.getHoodtune());
+        telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
         telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());
         telemetry.update();
 
@@ -227,8 +217,8 @@ public class interpolationtest extends NextFTCOpMode {
         //y = 5.25858x + 787.29599  SHOOTER SPEED EQ (X = distance from blue goal) (Y = shooter velocity)
         //shootertune = (5.25858 * DISTANCETOBLUEGOAL) + 787.29599;
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
-        SubShoot.INSTANCE.sethoodtune(HoodTune);
-        SubShoot.INSTANCE.HoodInterpolation().schedule();
+        SubHood.INSTANCE.sethoodtune(HoodTune);
+        SubHood.INSTANCE.HoodInterpolation().schedule();
 //        if (DISTANCETOBLUEGOAL >= 65.00){
 //            HoodTune = 0.35;
 //        }else if (DISTANCETOBLUEGOAL < 65.00){

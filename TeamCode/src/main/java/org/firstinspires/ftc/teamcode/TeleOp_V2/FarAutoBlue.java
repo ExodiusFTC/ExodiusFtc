@@ -1,23 +1,17 @@
 package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
-import static dev.nextftc.extensions.pedro.PedroComponent.follower;
-
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 import org.firstinspires.ftc.teamcode.subsystems.SubTurret;
-
-import java.util.ArrayList;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
@@ -33,7 +27,7 @@ public class FarAutoBlue extends NextFTCOpMode {
     public FarAutoBlue(){
         addComponents(
                 new PedroComponent(Constants::createFollower),
-                new SubsystemComponent(SubShoot.INSTANCE, SubIntake.INSTANCE, SubTurret.INSTANCE),
+                new SubsystemComponent(SubShoot.INSTANCE, SubIntake.INSTANCE, SubTurret.INSTANCE, SubHood.INSTANCE),
                 BulkReadComponent.INSTANCE
         );
     }
@@ -153,15 +147,15 @@ public class FarAutoBlue extends NextFTCOpMode {
     public void onUpdate(){
         SubShoot.INSTANCE.setPIDTRUE(true);
         SubShoot.INSTANCE.PIDfarShot.schedule();
-        telemetry.addData("Hood Pos", SubShoot.INSTANCE.getHoodtune());
+        telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
         telemetry.addData("Flywheel vel", SubShoot.INSTANCE.getvel());
         telemetry.addData("turret pos", SubTurret.INSTANCE.getPosition());
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
         telemetry.addData("turret Position", SubTurret.INSTANCE.getPosition());
         DISTANCETOBLUEGOAL = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
         HoodTune = -0.00000594867 * Math.pow(DISTANCETOBLUEGOAL, 3) + 0.00178147 * Math.pow(DISTANCETOBLUEGOAL, 2) - 0.172839 * DISTANCETOBLUEGOAL+ 5.77029;
-        SubShoot.INSTANCE.sethoodtune(HoodTune);
-        SubShoot.INSTANCE.HoodInterpolation().schedule();
+        SubHood.INSTANCE.sethoodtune(HoodTune);
+        SubHood.INSTANCE.HoodInterpolation().schedule();
         telemetry.update();
 
     }

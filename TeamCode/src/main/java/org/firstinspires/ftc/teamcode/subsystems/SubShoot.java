@@ -25,9 +25,9 @@ public class SubShoot implements Subsystem {
     public static final SubShoot INSTANCE = new SubShoot();
     private SubShoot(){}
 
-    private ServoEx HoodRot = new ServoEx("Hood");
+
     private MotorEx shooterMotor = new MotorEx("SH");
-    private MotorEx shooterMotor2 = new MotorEx("SH2");
+    private MotorEx shooterMotor2 = new MotorEx("SH2").reversed();
     private MotorGroup SHOOTERS = new MotorGroup(shooterMotor, shooterMotor2);
     public boolean PIDTRUE;
     double shottune;
@@ -39,27 +39,15 @@ public class SubShoot implements Subsystem {
             .build();
 
 
-
-    public Command hood1 = new SetPosition(HoodRot, 0).requires(this);
-    public Command HoldShoot = new SetPower(shooterMotor, 1).requires(this);
-    public Command HoldShoot2 = new SetPower(shooterMotor2, 1).requires(this);
     public Command StopShoot = new SetPower(shooterMotor, 0).requires(this);
-    public Command StopShoot2 = new SetPower(shooterMotor2, 0).requires(this);
-    public Command ReverseShoot = new SetPower(shooterMotor, -1).requires(this);
-    public Command ReverseShoot2 = new SetPower(shooterMotor2, -1).requires(this);
-    public Command AutoCloseShoot = new SetPower(shooterMotor, 0.83).requires(this);
-    public Command AutoCloseShoot2 = new SetPower(shooterMotor2, 0.98).requires(this);
+
     public Command PIDshot = new RunToVelocity(controlSystem, 1100, 30).requires(this);
     public Command PIDfarShot = new RunToVelocity(controlSystem, 1400, 30).requires(this);
-
-    public Command PIDstop = new RunToVelocity(controlSystem, 0, 2000).requires(this);
 
     public Command InterpolationTuning(){
         return new RunToVelocity(controlSystem, shottune, 30 ).requires(this);
     }
-    public Command HoodInterpolation(){
-        return new SetPosition(HoodRot, hoodtune).requires(this);
-    }
+
 
     public double getvel(){
         return SHOOTERS.getVelocity();
@@ -72,12 +60,7 @@ public class SubShoot implements Subsystem {
 
         return shottune;
     }
-    public void sethoodtune(double tunevalue){
-        hoodtune = tunevalue;
-    }
-    public double getHoodtune(){
-        return hoodtune;
-    }
+
 
 
 
@@ -85,7 +68,6 @@ public class SubShoot implements Subsystem {
 
     @Override
     public void initialize() {
-        HoodRot.setPosition(0.35);
         // initialization logic (runs on init)
 
         //shooterMotor.getMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
