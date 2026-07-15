@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.util.InterpLUT;
 import com.pedropathing.math.MathFunctions;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -27,7 +26,7 @@ public class SubShoot implements Subsystem {
 
 
     private MotorEx shooterMotor = new MotorEx("SH");
-    private MotorEx shooterMotor2 = new MotorEx("SH2").reversed();
+    private MotorEx shooterMotor2 = new MotorEx("SH2");
     private MotorGroup SHOOTERS = new MotorGroup(shooterMotor, shooterMotor2);
     public boolean PIDTRUE;
     double shottune;

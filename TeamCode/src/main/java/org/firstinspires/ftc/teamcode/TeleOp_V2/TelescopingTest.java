@@ -1,31 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.pedroPathing.Intake;
-import org.firstinspires.ftc.teamcode.pedroPathing.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.FeedbackServoSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SubCRServo;
-import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
-import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
-import org.firstinspires.ftc.teamcode.subsystems.SubTurret;
-
-import java.util.concurrent.TimeUnit;
 
 import dev.nextftc.control.ControlSystem;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
-import dev.nextftc.core.units.Distance;
-import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;

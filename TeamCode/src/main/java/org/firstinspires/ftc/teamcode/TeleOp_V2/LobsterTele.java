@@ -5,30 +5,44 @@ package org.firstinspires.ftc.teamcode.TeleOp_V2;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.SubHood;
+import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 
 
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.extensions.pedro.PedroDriverControlled;
+import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
+import dev.nextftc.hardware.driving.DriverControlledCommand;
 
 @TeleOp(name = "LobsterTele")
 public class LobsterTele extends NextFTCOpMode{
     public LobsterTele() {
         addComponents(
-                new SubsystemComponent(SubShoot.INSTANCE, SubHood.INSTANCE),
+                new SubsystemComponent(SubShoot.INSTANCE, SubHood.INSTANCE, SubIntake.INSTANCE),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
         );
     }
-    public double shootertune = 1000;
-    public double hoodtune = 0;
+    public double shootertune = 0;
+    public double hoodtune = 0.5;
     @Override
     public void onInit(){}
 
     @Override
-    public void onStartButtonPressed(){}
+    public void onStartButtonPressed(){
+        DriverControlledCommand driverControlled = new PedroDriverControlled(
+                Gamepads.gamepad1().leftStickY().negate(),
+                Gamepads.gamepad1().leftStickX().negate(),
+                Gamepads.gamepad1().rightStickX().negate()
+        );
+        driverControlled.schedule();
+        Gamepads.gamepad1().rightTrigger().greaterThan(0.2)
+                .whenBecomesTrue(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake))
+                .whenBecomesFalse(SubIntake.INSTANCE.StopIntake.and(SubIntake.INSTANCE.stopTransfer));
+    }
 
     @Override
     public void onUpdate(){
@@ -46,6 +60,8 @@ public class LobsterTele extends NextFTCOpMode{
         }
         SubHood.INSTANCE.sethoodtune(hoodtune);
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
+        SubHood.INSTANCE.HoodInterpolation().schedule();
+
 
 
         if (gamepad2.x){

@@ -18,14 +18,13 @@ public class SubIntake implements Subsystem {
     public static final SubIntake INSTANCE = new SubIntake();
     private SubIntake(){}
     private MotorEx IntakeMotor = new MotorEx("I");
+    private MotorEx TransferMotor = new MotorEx("Transfer");
 
     //384.5 encoder ticks per revolution
     //2787.625 max tps
     // max speed probably around 2500
     private ServoEx Blocker = new ServoEx("Kick");
-    private ControlSystem intakepid = ControlSystem.builder()
-            .velPid(0.01, 0, 0.0001)
-            .build();
+
 
 
 
@@ -33,18 +32,17 @@ public class SubIntake implements Subsystem {
     public Command KickDown = new SetPosition(Blocker, 0.45).requires(this);
     // Kickdown - opens blocker
     // KickUp - closes blocker
-    public Command KickMiddle = new SetPosition(Blocker, 0.45).requires(this);
     public Command HoldIntake = new SetPower(IntakeMotor, 1).requires(this);
-    public Command transferIntake = new SetPower(IntakeMotor, 0.6).requires(this);
+    public Command transferIntake = new SetPower(TransferMotor, -1).requires(this);
+    public Command stopTransfer = new SetPower(TransferMotor, 0).requires(this);
     public Command StopIntake = new SetPower(IntakeMotor, 0).requires(this);
     public Command ReverseIntake = new SetPower(IntakeMotor, -1).requires(this);
-    public Command IntakePid = new RunToVelocity(intakepid, 2500, 30).requires(this);
-    public Command IntakePidStop = new RunToVelocity(intakepid, 0, 50).requires(this);
+
 
 
     @Override
     public void periodic(){
-//        IntakeMotor.setPower(intakepid.calculate(IntakeMotor.getState()));
+
     }
 
 
