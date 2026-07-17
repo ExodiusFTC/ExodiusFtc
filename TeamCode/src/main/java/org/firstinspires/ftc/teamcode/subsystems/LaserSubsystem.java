@@ -1,0 +1,33 @@
+package org.firstinspires.ftc.teamcode.subsystems;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+public class LaserSubsystem {
+    private DigitalChannel laser;
+    public boolean detected;
+    ElapsedTime elapsedTime = new ElapsedTime();
+    public LaserSubsystem(HardwareMap hardwareMap){
+        laser = hardwareMap.get(DigitalChannel.class, "laser");
+        laser.setMode(DigitalChannel.Mode.INPUT);
+    }
+    public void update(){
+        detected = laser.getState();
+        if (detected){
+            elapsedTime.reset();
+            elapsedTime.startTime();
+        }
+        else{
+            elapsedTime.reset();
+        }
+    }
+    public boolean getState(){
+        return detected;
+    }
+    public boolean threeBalls(){
+        if (elapsedTime.seconds() > 1.0){
+            return true;
+        }
+        return false;
+    }
+}

@@ -19,7 +19,6 @@ import java.util.List;
 public class LimelightSubsystem {
 
     private Limelight3A limelight;
-    private IMU imu;
 
     // Tracking variables
     private double pitchAngle = 0.0;

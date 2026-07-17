@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.LaserSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.extensions.pedro.PedroDriverControlled;
 import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
@@ -22,12 +25,15 @@ public class LobsterTele extends NextFTCOpMode{
     public LobsterTele() {
         addComponents(
                 new SubsystemComponent(SubShoot.INSTANCE, SubHood.INSTANCE, SubIntake.INSTANCE),
+                new PedroComponent(Constants::createFollower),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
         );
     }
+    private LaserSubsystem Laser;
     public double shootertune = 0;
     public double hoodtune = 0.5;
+    public boolean detected;
     @Override
     public void onInit(){}
 
@@ -46,6 +52,8 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
+        Laser.update();
+        detected = Laser.getState();
         if (gamepad2.aWasPressed()){
             shootertune += 50;
         }
