@@ -19,9 +19,14 @@ import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 import dev.nextftc.hardware.driving.DriverControlledCommand;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "LobsterTele")
 public class LobsterTele extends NextFTCOpMode{
+    Gamepad.RumbleEffect customRumbleEffect;    // Use to build a custom rumble sequence.
+
     public LobsterTele() {
         addComponents(
                 new SubsystemComponent(SubShoot.INSTANCE, SubHood.INSTANCE, SubIntake.INSTANCE),
@@ -35,7 +40,15 @@ public class LobsterTele extends NextFTCOpMode{
     public double hoodtune = 0.5;
     public boolean detected;
     @Override
-    public void onInit(){}
+    public void onInit(){
+        customRumbleEffect = new Gamepad.RumbleEffect.Builder()
+                .addStep(0.0, 1.0, 1000)  //  Rumble right motor 100% for 1000 mSec
+                .addStep(0.0, 0.0, 1000)  //  Pause for 300 mSec
+                .addStep(1.0, 0.0, 1000)  //  Rumble left motor 100% for 1000 mSec
+                .addStep(1.0, 1.0, 1000) // run both for 1000 milliseconds
+                .build();
+    }
+
 
     @Override
     public void onStartButtonPressed(){
@@ -48,12 +61,16 @@ public class LobsterTele extends NextFTCOpMode{
         Gamepads.gamepad1().rightTrigger().greaterThan(0.2)
                 .whenBecomesTrue(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake))
                 .whenBecomesFalse(SubIntake.INSTANCE.StopIntake.and(SubIntake.INSTANCE.stopTransfer));
+
+
+
     }
 
     @Override
     public void onUpdate(){
-        Laser.update();
-        detected = Laser.getState();
+        gamepad1.runRumbleEffect(customRumbleEffect);
+
+
         if (gamepad2.aWasPressed()){
             shootertune += 50;
         }

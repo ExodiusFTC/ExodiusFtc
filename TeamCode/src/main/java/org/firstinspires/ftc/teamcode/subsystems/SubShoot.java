@@ -33,8 +33,8 @@ public class SubShoot implements Subsystem {
     double hoodtune;
 
     private ControlSystem controlSystem = ControlSystem.builder()
-            .velPid(0.01, 0, 0)
-            .basicFF(0.00044, 0, 0.15)
+            .velPid(0.001, 0, 0)
+            .basicFF(0.000345, 0, 0.05)
             .build();
 
 
