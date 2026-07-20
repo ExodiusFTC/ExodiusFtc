@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "LobsterTele")
 public class LobsterTele extends NextFTCOpMode{
+    private LaserSubsystem laser;
     Gamepad.RumbleEffect customRumbleEffect;    // Use to build a custom rumble sequence.
 
     public LobsterTele() {
@@ -41,6 +42,7 @@ public class LobsterTele extends NextFTCOpMode{
     public boolean detected;
     @Override
     public void onInit(){
+        laser = new LaserSubsystem(hardwareMap);
         customRumbleEffect = new Gamepad.RumbleEffect.Builder()
                 .addStep(0.0, 1.0, 1000)  //  Rumble right motor 100% for 1000 mSec
                 .addStep(0.0, 0.0, 1000)  //  Pause for 300 mSec
@@ -68,7 +70,8 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
-        gamepad1.runRumbleEffect(customRumbleEffect);
+        //gamepad1.runRumbleEffect(customRumbleEffect);
+        laser.update();
 
 
         if (gamepad2.aWasPressed()){
@@ -95,6 +98,7 @@ public class LobsterTele extends NextFTCOpMode{
         } else if (!gamepad2.x){
             SubShoot.INSTANCE.setPIDTRUE(false);
         }
+        telemetry.addData("Laser Beam State", laser.getState() ? "DETECTED" : "CLEAR");
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
         telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());

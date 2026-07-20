@@ -33,13 +33,13 @@ public class LaserSubsystem {
     public boolean getState(){
         return detected;
     }
-    public int getBallCount(){
-        return ballCount;
-    }
-    // public boolean threeBalls(){
-    //     if (elapsedTime.seconds() > 1.0){
-    //         return true;
-    //     }
-    //     return false;
-    // }
+//    public int getBallCount(){
+//        return ballCount;
+//    }
+     public boolean threeBalls(){
+         if (elapsedTime.seconds() > 1.0){
+             return true;
+         }
+         return false;
+     }
 }
