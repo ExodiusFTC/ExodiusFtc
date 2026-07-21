@@ -17,17 +17,28 @@ public class SubRamp implements Subsystem {
     private ServoEx LeftRamp = new ServoEx("LRamp");
 
     public static final double UP_POS = 0.5;
-    public static final double DOWN_POS = 0.7;
+    public static final double DOWN_POS = 0.62;
 
-    public Command RampDown = new SetPosition(RightRamp,1).requires(this);
+    public Command RampDown = new SetPosition(RightRamp,DOWN_POS).requires(this);
+    public Command RampUp = new SetPosition(RightRamp,UP_POS).requires(this);
+    public Command Ramptune(double pos){
+        return new SetPosition(RightRamp, pos).requires(this);
+    }
+    public double getUpPos(){
+        return RightRamp.getPosition();
+    }
+    public double getDownPos(){
+        return LeftRamp.getPosition();
+    }
 
-    public Command setLeftRampPos(double pos) {
-        return new InstantCommand(() -> LeftRamp.setPosition(pos));
+
+    @Override
+    public void initialize(){
+        RampDown.schedule();
     }
     @Override
-    public void initialize(){}
-    @Override
     public void periodic(){
+
         LeftRamp.setPosition(1- RightRamp.getPosition());
     }
 
