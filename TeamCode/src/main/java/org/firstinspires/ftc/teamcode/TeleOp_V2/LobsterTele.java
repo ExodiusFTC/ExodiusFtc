@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
 
 
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.LaserSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubRamp;
+import org.firstinspires.ftc.teamcode.subsystems.SubServoTurret;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 
 
@@ -26,12 +28,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "LobsterTele")
 public class LobsterTele extends NextFTCOpMode{
+    public static Pose example = new Pose(72, 72, Math.toRadians(90));
+
     private LaserSubsystem laser;
     Gamepad.RumbleEffect customRumbleEffect;    // Use to build a custom rumble sequence.
 
     public LobsterTele() {
         addComponents(
-                new SubsystemComponent(SubShoot.INSTANCE, SubHood.INSTANCE, SubIntake.INSTANCE, SubRamp.INSTANCE),
+                new SubsystemComponent(SubShoot.INSTANCE, SubHood.INSTANCE, SubIntake.INSTANCE, SubRamp.INSTANCE, SubServoTurret.INSTANCE),
                 new PedroComponent(Constants::createFollower),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
@@ -68,6 +72,9 @@ public class LobsterTele extends NextFTCOpMode{
         Gamepads.gamepad1().leftBumper()
                 .whenBecomesTrue(SubRamp.INSTANCE.RampUp)
                 .whenBecomesFalse(SubRamp.INSTANCE.RampDown);
+        Gamepads.gamepad2().leftBumper()
+                .whenBecomesTrue(SubServoTurret.INSTANCE.testing)
+                .whenBecomesFalse(SubServoTurret.INSTANCE.testing2);
 
 
 
@@ -77,7 +84,8 @@ public class LobsterTele extends NextFTCOpMode{
     public void onUpdate(){
         //gamepad1.runRumbleEffect(customRumbleEffect);
         laser.update();
-
+        //double pos = SubServoTurret.INSTANCE.calculate(example);
+        //SubServoTurret.INSTANCE.setPos(pos);
 
         if (gamepad2.aWasPressed()){
             shootertune += 50;

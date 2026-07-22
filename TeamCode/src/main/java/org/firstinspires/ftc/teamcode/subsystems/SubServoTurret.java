@@ -7,6 +7,7 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.hardware.impl.ServoEx;
+import dev.nextftc.hardware.positionable.SetPosition;
 
 public class SubServoTurret implements Subsystem {
     public static Pose BLUEGOAL = new Pose(136, 139, Math.toRadians(0));
@@ -16,6 +17,9 @@ public class SubServoTurret implements Subsystem {
     private SubServoTurret(){}
     private ServoEx turret1 = new ServoEx("turret");
     private ServoEx turret2 = new ServoEx("turret2");
+    public Command testing = new SetPosition(turret1, 1.0).requires(this);
+    public Command testing2 = new SetPosition(turret1, 0.0).requires(this);
+
 
     public double calculate(Pose botPose){
         double Offset_x = -3 * Math.cos(botPose.getHeading());
@@ -28,7 +32,7 @@ public class SubServoTurret implements Subsystem {
         double robotHeading = Math.toDegrees(botPose.getHeading());
         double turretTargetAngle = fieldAngleToGoal - robotHeading;
         double CorrectTurning = normalizeAngle(turretTargetAngle);
-        double desiredturredpos = 1/360  * CorrectTurning + 0.5;
+        double desiredturredpos = 1.0/360.0  * CorrectTurning + 0.5;
         return desiredturredpos;
         // right limit : 1
         // left limit : 0
@@ -51,7 +55,8 @@ public class SubServoTurret implements Subsystem {
     }
     @Override
     public void periodic(){
-        turret1.setPosition(turret1Pos);
+        turret1Pos = turret1.getPosition();
+        //turret1.setPosition(turret1Pos);
         turret2.setPosition(1 - turret1Pos);
         // periodic logic (runs every loop)
     }
