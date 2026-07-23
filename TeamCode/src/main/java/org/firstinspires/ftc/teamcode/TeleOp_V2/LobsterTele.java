@@ -74,7 +74,10 @@ public class LobsterTele extends NextFTCOpMode{
                 .whenBecomesFalse(SubRamp.INSTANCE.RampDown);
         Gamepads.gamepad2().leftBumper()
                 .whenBecomesTrue(SubServoTurret.INSTANCE.testing)
-                .whenBecomesFalse(SubServoTurret.INSTANCE.testing2);
+                .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
+        Gamepads.gamepad2().rightBumper()
+                .whenBecomesTrue(SubServoTurret.INSTANCE.testing2)
+                .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
 
 
 
