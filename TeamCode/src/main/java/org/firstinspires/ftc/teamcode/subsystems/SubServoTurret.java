@@ -19,7 +19,7 @@ public class SubServoTurret implements Subsystem {
     private ServoEx turret2 = new ServoEx("turret2");
     public Command testing = new SetPosition(turret1, 1.0).requires(this);
     public Command testing2 = new SetPosition(turret1, 0.0).requires(this);
-    public Command middle = new SetPosition(turret1, 0.51).requires(this);
+    public Command middle = new SetPosition(turret1, 0.50).requires(this);
 
 
     public double calculate(Pose botPose){
