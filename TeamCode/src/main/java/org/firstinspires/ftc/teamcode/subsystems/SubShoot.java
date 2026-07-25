@@ -1,27 +1,26 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.math.MathFunctions;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.commands.utility.LambdaCommand;
+
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.hardware.controllable.MotorGroup;
-import dev.nextftc.hardware.controllable.RunToPosition;
+
 import dev.nextftc.hardware.controllable.RunToVelocity;
 import dev.nextftc.hardware.impl.MotorEx;
-import dev.nextftc.hardware.impl.ServoEx;
-import dev.nextftc.hardware.positionable.SetPosition;
+
 import dev.nextftc.hardware.powerable.SetPower;
+import com.seattlesolvers.solverslib.util.InterpLUT;
+
 
 @Config
 public class SubShoot implements Subsystem {
     public static final SubShoot INSTANCE = new SubShoot();
+    InterpLUT lut = new InterpLUT();
+
     private SubShoot(){}
 
 
@@ -31,6 +30,7 @@ public class SubShoot implements Subsystem {
     public boolean PIDTRUE;
     double shottune;
     double hoodtune;
+    double goalDist;
 
     private ControlSystem controlSystem = ControlSystem.builder()
             .velPid(0.002, 0, 0)
@@ -59,6 +59,9 @@ public class SubShoot implements Subsystem {
 
         return shottune;
     }
+    public void setDist(double dist){
+        goalDist = dist;
+    }
 
 
 
@@ -67,12 +70,19 @@ public class SubShoot implements Subsystem {
 
     @Override
     public void initialize() {
+        lut.add(1.1, 0.2);
+        lut.add(2.7, .5);
+        lut.add(3.6, 0.75);
+        lut.add(4.1, 0.9);
+        lut.add(5, 1);
+        lut.createLUT();
         // initialization logic (runs on init)
 
         //shooterMotor.getMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     @Override
     public void periodic() {
+        double interVel = lut.get(goalDist);
         // periodic logic (runs every loop)
         if (PIDTRUE){
             SHOOTERS.setPower(controlSystem.calculate(SHOOTERS.getState()));

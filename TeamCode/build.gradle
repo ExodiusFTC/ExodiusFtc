@@ -30,6 +30,7 @@ android {
 repositories {
     maven {
         url = 'https://maven.brott.dev/'
+        url "https://repo.dairy.foundation/releases"
     }
 }
 
@@ -45,4 +46,5 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.21'
     implementation "com.bylazar:fullpanels:1.0.6"
     implementation 'dev.nextftc.extensions:pedro:1.0.0'
+    implementation "org.solverslib:core:0.3.4"
 }
