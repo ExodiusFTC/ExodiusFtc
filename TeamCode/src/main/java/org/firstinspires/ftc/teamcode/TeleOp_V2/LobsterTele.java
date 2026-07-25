@@ -67,11 +67,11 @@ public class LobsterTele extends NextFTCOpMode{
         );
         driverControlled.schedule();
         Gamepads.gamepad1().rightTrigger().greaterThan(0.2)
-                .whenBecomesTrue(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake))
+                .whenBecomesTrue(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.slowTransfer))
                 .whenBecomesFalse(SubIntake.INSTANCE.StopIntake.and(SubIntake.INSTANCE.stopTransfer));
-        Gamepads.gamepad1().leftBumper()
-                .whenBecomesTrue(SubRamp.INSTANCE.RampUp)
-                .whenBecomesFalse(SubRamp.INSTANCE.RampDown);
+        Gamepads.gamepad2().rightTrigger().greaterThan(0.2)
+                .whenBecomesTrue(SubRamp.INSTANCE.RampUp.and(SubIntake.INSTANCE.transferIntake.and(SubIntake.INSTANCE.transferIntake)))
+                .whenBecomesFalse(SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.StopIntake.and(SubIntake.INSTANCE.stopTransfer)));
         Gamepads.gamepad2().leftBumper()
                 .whenBecomesTrue(SubServoTurret.INSTANCE.testing)
                 .whenBecomesFalse(SubServoTurret.INSTANCE.middle);

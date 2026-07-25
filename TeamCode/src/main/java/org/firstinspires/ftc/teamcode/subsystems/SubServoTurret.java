@@ -58,7 +58,7 @@ public class SubServoTurret implements Subsystem {
     public void periodic(){
         turret1Pos = turret1.getPosition();
         //turret1.setPosition(turret1Pos);
-        turret2.setPosition(1 - turret1Pos);
+        turret2.setPosition(turret1Pos);
         // periodic logic (runs every loop)
     }
 }
