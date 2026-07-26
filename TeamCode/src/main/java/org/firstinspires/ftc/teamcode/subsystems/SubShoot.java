@@ -19,7 +19,6 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class SubShoot implements Subsystem {
     public static final SubShoot INSTANCE = new SubShoot();
-    InterpLUT lut = new InterpLUT();
 
     private SubShoot(){}
 
@@ -70,19 +69,14 @@ public class SubShoot implements Subsystem {
 
     @Override
     public void initialize() {
-        lut.add(1.1, 0.2);
-        lut.add(2.7, .5);
-        lut.add(3.6, 0.75);
-        lut.add(4.1, 0.9);
-        lut.add(5, 1);
-        lut.createLUT();
+
         // initialization logic (runs on init)
 
         //shooterMotor.getMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     @Override
     public void periodic() {
-        double interVel = lut.get(goalDist);
+
         // periodic logic (runs every loop)
         if (PIDTRUE){
             SHOOTERS.setPower(controlSystem.calculate(SHOOTERS.getState()));

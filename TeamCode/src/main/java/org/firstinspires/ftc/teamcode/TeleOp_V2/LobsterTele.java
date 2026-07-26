@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.subsystems.SubServoTurret;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 
 
+import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.PedroComponent;
@@ -46,6 +48,17 @@ public class LobsterTele extends NextFTCOpMode{
     public double hoodtune = 0.5;
     public double ramptune = 0.5;
     public boolean detected;
+    Command transfer = new ParallelGroup(
+            SubIntake.INSTANCE.HoldIntake,
+            SubIntake.INSTANCE.transferIntake,
+            SubRamp.INSTANCE.RampUp
+    );
+    Command stoppingTransfer = new ParallelGroup(
+            SubIntake.INSTANCE.StopIntake,
+            SubIntake.INSTANCE.stopTransfer,
+            SubRamp.INSTANCE.RampDown
+    );
+
     @Override
     public void onInit(){
         laser = new LaserSubsystem(hardwareMap);
@@ -67,11 +80,11 @@ public class LobsterTele extends NextFTCOpMode{
         );
         driverControlled.schedule();
         Gamepads.gamepad1().rightTrigger().greaterThan(0.2)
-                .whenBecomesTrue(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.slowTransfer))
+                .whenBecomesTrue(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake))
                 .whenBecomesFalse(SubIntake.INSTANCE.StopIntake.and(SubIntake.INSTANCE.stopTransfer));
         Gamepads.gamepad2().rightTrigger().greaterThan(0.2)
-                .whenBecomesTrue(SubRamp.INSTANCE.RampUp.and(SubIntake.INSTANCE.transferIntake.and(SubIntake.INSTANCE.transferIntake)))
-                .whenBecomesFalse(SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.StopIntake.and(SubIntake.INSTANCE.stopTransfer)));
+                .whenBecomesTrue(SubRamp.INSTANCE.RampUp)
+                .whenBecomesFalse(SubRamp.INSTANCE.RampDown);
         Gamepads.gamepad2().leftBumper()
                 .whenBecomesTrue(SubServoTurret.INSTANCE.testing)
                 .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
