@@ -39,8 +39,9 @@ public class SubShoot implements Subsystem {
 
     public Command StopShoot = new SetPower(shooterMotor, 0).requires(this);
 
-    public Command PIDshot = new RunToVelocity(controlSystem, 1100, 30).requires(this);
+    public Command PIDshot = new RunToVelocity(controlSystem, -1250, 30).requires(this);
     public Command PIDfarShot = new RunToVelocity(controlSystem, 1400, 30).requires(this);
+    //first shot from close: -1250 vel, 0.2 hood angle
 
     public Command InterpolationTuning(){
         return new RunToVelocity(controlSystem, shottune, 30 ).requires(this);

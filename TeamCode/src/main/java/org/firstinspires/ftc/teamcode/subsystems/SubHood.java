@@ -15,6 +15,7 @@ public class SubHood implements Subsystem {
     public Command HoodInterpolation(){
         return new SetPosition(Hood, hoodtune).requires(this);
     }
+    public Command autohood = new SetPosition(Hood, 0.2).requires(this);
     public void sethoodtune(double tunevalue){
         hoodtune = tunevalue;
     }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
+import com.pedropathing.control.PredictiveBrakingCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -20,8 +21,8 @@ public class Constants {
 
     // strafer chassis with battery and pinpoint + 2 odo wheels is 5.35239 kg
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(4)
-            .strafePodX(-6)
+            .forwardPodY(5)
+            .strafePodX(-5.5)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
@@ -31,8 +32,8 @@ public class Constants {
 
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .xVelocity(60.97231310746802)
-            .yVelocity(50.10489972933071)
+            .xVelocity(71.79318549689346)
+            .yVelocity(54.88959028589445)
             .maxPower(1)
             .rightFrontMotorName("FR").useBrakeModeInTeleOp(true)
             .rightRearMotorName("BR").useBrakeModeInTeleOp(true)
@@ -46,13 +47,10 @@ public class Constants {
 
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.09, 0, 0.01, 0.03))
-            .headingPIDFCoefficients(new PIDFCoefficients(1.1, 0, 0.001, 0.03))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.020, 0, 0.00005, 0.60, 0.01))
-            .centripetalScaling(0.0010)
-            .forwardZeroPowerAcceleration(-52.79464920367299)
-            .lateralZeroPowerAcceleration(-69.18479078267072)
-            .mass(11.07);
+            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.015, 0.04))
+            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.05, 0.158426452199045, 1.2024774202346961E-5))
+            .centripetalScaling(0)
+            .mass(14);
 
 
 
