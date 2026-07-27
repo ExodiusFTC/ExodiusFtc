@@ -1,0 +1,4 @@
+- [x] Increase timeouts to 3000ms in `LobsterCloseAutoBlue.java`
+- [x] Remove command flooding and redundant updates from `onUpdate`
+- [x] Fix `onStartButtonPressed` sequence
+- [ ] Verify robot proceeds past `FollowPath(chain1)`

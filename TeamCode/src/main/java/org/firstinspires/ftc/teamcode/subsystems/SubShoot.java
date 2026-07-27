@@ -19,7 +19,7 @@ import com.seattlesolvers.solverslib.util.InterpLUT;
 @Config
 public class SubShoot implements Subsystem {
     public static final SubShoot INSTANCE = new SubShoot();
-
+ 
     private SubShoot(){}
 
 

@@ -34,8 +34,8 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
     }
 
     public final Pose startPose = new Pose(34, 133, Math.toRadians(270));
-    public final Pose MoveForPreload = new Pose(24, 109, Math.toRadians(270));
-    public final Pose FirstStackPickup = new Pose(24, 90, Math.toRadians(270));
+    public final Pose MoveForPreload = new Pose(24, 104, Math.toRadians(270));
+    public final Pose FirstStackPickup = new Pose(21, 85, Math.toRadians(270));
     public final Pose ShootFirstStack = new Pose(52, 78, Math.toRadians(180));
     public final Pose SecondStackPickup = new Pose(15, 62, Math.toRadians(180));
     public final Pose ShootSecondStack = new Pose(57, 79, Math.toRadians(180));
@@ -55,21 +55,25 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
         chain1 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(startPose, MoveForPreload))
                 .setLinearHeadingInterpolation(startPose.getHeading(), MoveForPreload.getHeading())
-                // fires once path is 90% done, regardless of overshoot/isBusy()
-                .addParametricCallback(0.9, () ->
-                        SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake).schedule())
+                .setTranslationalConstraint(2.0)
+                .setHeadingConstraint(Math.toRadians(3))
+                .setTimeoutConstraint(3000)
                 .build();
 
         chain2 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(MoveForPreload, FirstStackPickup))
                 .setConstantHeadingInterpolation(FirstStackPickup.getHeading())
-                .addParametricCallback(0.9, () ->
-                        SubRamp.INSTANCE.RampUp.schedule())
+                .setTranslationalConstraint(2.0)
+                .setHeadingConstraint(Math.toRadians(3))
+                .setTimeoutConstraint(3000)
                 .build();
 
         chain3 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(FirstStackPickup, ShootFirstStack))
                 .setLinearHeadingInterpolation(FirstStackPickup.getHeading(), ShootFirstStack.getHeading())
+                .setTranslationalConstraint(2.0)
+                .setHeadingConstraint(Math.toRadians(3))
+                .setTimeoutConstraint(3000)
                 .build();
 
         chain4 = PedroComponent.follower().pathBuilder()
@@ -96,14 +100,17 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
     private Command autonomousRoutine(){
         return new SequentialGroup(
                 SubHood.INSTANCE.autohood,
+                SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake),
                 new FollowPath(chain1),
+                SubRamp.INSTANCE.RampUp,
                 new Delay(0.5),
+                SubRamp.INSTANCE.RampDown,
                 new FollowPath(chain2),
-                new FollowPath(chain3),
-                new FollowPath(chain4),
-                new FollowPath(chain5),
-                new FollowPath(chain6),
-                new FollowPath(chain7)
+                new FollowPath(chain3)
+//                new FollowPath(chain4),
+//                new FollowPath(chain5),
+//                new FollowPath(chain6),
+//                new FollowPath(chain7)
         );
     }
 
@@ -123,18 +130,19 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
     public void onInit(){
         Initialize().schedule();
         PedroComponent.follower().setPose(startPose);
-        buildPaths();
     }
 
     @Override
     public void onStartButtonPressed() {
+        SubShoot.INSTANCE.setPIDTRUE(true);
+        buildPaths();
+        PedroComponent.follower().update();
         autonomousRoutine().schedule();
+        SubShoot.INSTANCE.PIDshot.schedule();
     }
 
     @Override
     public void onUpdate(){
-        PedroComponent.follower().update();
-        SubShoot.INSTANCE.PIDshot.schedule();
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
         telemetry.update();
     }

@@ -48,14 +48,14 @@ public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.015, 0.04))
-            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.05, 0.158426452199045, 1.2024774202346961E-5))
+            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.1, 0.158426452199045, 1.2024774202346961E-5))
             .centripetalScaling(0)
             .mass(14);
 
 
 
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.95, 100, 1, 1);
 
 
     public static Follower createFollower(HardwareMap hardwareMap) {
