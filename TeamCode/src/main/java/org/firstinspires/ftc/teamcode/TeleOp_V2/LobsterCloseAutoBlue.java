@@ -35,7 +35,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     public final Pose startPose = new Pose(34, 133, Math.toRadians(270));
     public final Pose MoveForPreload = new Pose(24, 104, Math.toRadians(270));
-    public final Pose FirstStackPickup = new Pose(21, 85, Math.toRadians(270));
+    public final Pose FirstStackPickup = new Pose(24, 85, Math.toRadians(270));
     public final Pose ShootFirstStack = new Pose(52, 78, Math.toRadians(180));
     public final Pose SecondStackPickup = new Pose(15, 62, Math.toRadians(180));
     public final Pose ShootSecondStack = new Pose(57, 79, Math.toRadians(180));
