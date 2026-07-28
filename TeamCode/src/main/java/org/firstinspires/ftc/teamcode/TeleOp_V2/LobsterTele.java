@@ -44,12 +44,16 @@ public class LobsterTele extends NextFTCOpMode{
         );
     }
     public static Pose startingPose = new Pose(9, 9, Math.toRadians(180));
+    public static Pose BLUEGOAL = new Pose(0, 144, Math.toRadians(0));
+
 
     private LaserSubsystem Laser;
+    double robotHeading;
     public double shootertune = 0;
     public double hoodtune = 0.5;
     public double ramptune = 0.5;
     public boolean detected;
+    public double turrettune = 0.502;
     Command transfer = new ParallelGroup(
             SubIntake.INSTANCE.HoldIntake,
             SubIntake.INSTANCE.transferIntake,
@@ -102,8 +106,13 @@ public class LobsterTele extends NextFTCOpMode{
     @Override
     public void onUpdate(){
         PedroComponent.follower().update();
-        double desPos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
-        SubServoTurret.INSTANCE.setPos(desPos);
+        if (gamepad2.dpadDownWasPressed()){
+            turrettune += 0.05;
+        }
+        if(gamepad2.dpadUpWasPressed()){
+            turrettune-=0.05;
+        }
+        SubServoTurret.INSTANCE.setPos(turrettune);
         //gamepad1.runRumbleEffect(customRumbleEffect);
         laser.update();
         //double pos = SubServoTurret.INSTANCE.calculate(example);
@@ -132,6 +141,14 @@ public class LobsterTele extends NextFTCOpMode{
         SubHood.INSTANCE.HoodInterpolation().schedule();
         //SubRamp.INSTANCE.Ramptune(ramptune).schedule();
 
+        double dx = BLUEGOAL.getX() - PedroComponent.follower().getPose().getX();
+        double dy = BLUEGOAL.getY() - PedroComponent.follower().getPose().getY();
+        double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
+        double robotHeading = Math.toDegrees(PedroComponent.follower().getHeading());
+        double turretTargetAngle = fieldAngleToGoal - robotHeading;
+        double CorrectTurning = normalizeAngle(turretTargetAngle);
+        double despos = 0.00201389*CorrectTurning+0.502333;
+        SubServoTurret.INSTANCE.setPos(despos);
 
 
         if (gamepad2.x){
@@ -140,8 +157,10 @@ public class LobsterTele extends NextFTCOpMode{
         } else if (!gamepad2.x){
             SubShoot.INSTANCE.setPIDTRUE(false);
         }
-        telemetry.addData("des pos", desPos);
-        telemetry.addData("turret target ange", SubServoTurret.INSTANCE.getTurretTargetAngle());
+        telemetry.addData("turrettune", turrettune);
+        telemetry.addData("Correct turning", CorrectTurning);
+        telemetry.addData("turretTargetAngle", turretTargetAngle);
+        telemetry.addData("field AngleToGoal", fieldAngleToGoal);
         telemetry.addData("botpos", PedroComponent.follower().getPose());
         telemetry.addData("Laser Beam State", laser.getState() ? "DETECTED" : "CLEAR");
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
@@ -150,6 +169,12 @@ public class LobsterTele extends NextFTCOpMode{
         telemetry.addData("ramptune", SubRamp.INSTANCE.getUpPos());
         telemetry.addData("ramptune2", SubRamp.INSTANCE.getDownPos());
         telemetry.update();
+    }
+    double normalizeAngle(double angle) {
+        angle = -1 * (180 - angle);
+        while (angle > 180) angle -= 360;
+        while (angle < -180) angle += 360;
+        return angle;
     }
 
 }
