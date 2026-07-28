@@ -13,13 +13,15 @@ public class SubServoTurret implements Subsystem {
     public static Pose BLUEGOAL = new Pose(136, 139, Math.toRadians(0));
 
     public double turret1Pos;
+    public double turretsetpos;
+    public double turretTargetAngle;
     public static final SubServoTurret INSTANCE = new SubServoTurret();
     private SubServoTurret(){}
     private ServoEx turret1 = new ServoEx("turret");
     private ServoEx turret2 = new ServoEx("turret2");
-    public Command testing = new SetPosition(turret1, 1.0).requires(this);
-    public Command testing2 = new SetPosition(turret1, 0.0).requires(this);
-    public Command middle = new SetPosition(turret1, 0.50).requires(this);
+    public Command testing = new SetPosition(turret1, 0.865).requires(this);
+    public Command testing2 = new SetPosition(turret1, 0.14).requires(this);
+    public Command middle = new SetPosition(turret1, 0.502).requires(this);
 
 
     public double calculate(Pose botPose){
@@ -31,9 +33,9 @@ public class SubServoTurret implements Subsystem {
         double dy = BLUEGOAL.getY() - TurretPosY;
         double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
         double robotHeading = Math.toDegrees(botPose.getHeading());
-        double turretTargetAngle = fieldAngleToGoal - robotHeading;
+        turretTargetAngle = fieldAngleToGoal - robotHeading;
         double CorrectTurning = normalizeAngle(turretTargetAngle);
-        double desiredturredpos = 1.0/360.0  * CorrectTurning + 0.5;
+        double desiredturredpos = -0.002014  * CorrectTurning + 0.5023;
         return desiredturredpos;
         // right limit : 1
         // left limit : 0
@@ -47,7 +49,10 @@ public class SubServoTurret implements Subsystem {
         return angle;
     }
     public void setPos(double servo1pos){
-        turret1Pos = servo1pos;
+        turretsetpos = servo1pos;
+    }
+    public double getTurretTargetAngle(){
+        return turretTargetAngle;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class SubServoTurret implements Subsystem {
     }
     @Override
     public void periodic(){
+        turret1.setPosition(turretsetpos);
         turret1Pos = turret1.getPosition();
         //turret1.setPosition(turret1Pos);
         turret2.setPosition(turret1Pos);

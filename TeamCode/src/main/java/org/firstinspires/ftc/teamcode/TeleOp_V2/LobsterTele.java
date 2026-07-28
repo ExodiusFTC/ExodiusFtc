@@ -43,6 +43,8 @@ public class LobsterTele extends NextFTCOpMode{
                 BindingsComponent.INSTANCE
         );
     }
+    public static Pose startingPose = new Pose(9, 9, Math.toRadians(180));
+
     private LaserSubsystem Laser;
     public double shootertune = 0;
     public double hoodtune = 0.5;
@@ -62,6 +64,7 @@ public class LobsterTele extends NextFTCOpMode{
     @Override
     public void onInit(){
         laser = new LaserSubsystem(hardwareMap);
+        PedroComponent.follower().setStartingPose(startingPose);
         customRumbleEffect = new Gamepad.RumbleEffect.Builder()
                 .addStep(0.0, 1.0, 1000)  //  Rumble right motor 100% for 1000 mSec
                 .addStep(0.0, 0.0, 1000)  //  Pause for 300 mSec
@@ -85,12 +88,12 @@ public class LobsterTele extends NextFTCOpMode{
         Gamepads.gamepad2().rightTrigger().greaterThan(0.2)
                 .whenBecomesTrue(SubRamp.INSTANCE.RampUp)
                 .whenBecomesFalse(SubRamp.INSTANCE.RampDown);
-        Gamepads.gamepad2().leftBumper()
-                .whenBecomesTrue(SubServoTurret.INSTANCE.testing)
-                .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
-        Gamepads.gamepad2().rightBumper()
-                .whenBecomesTrue(SubServoTurret.INSTANCE.testing2)
-                .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
+//        Gamepads.gamepad2().leftBumper()
+//                .whenBecomesTrue(SubServoTurret.INSTANCE.testing)
+//                .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
+//        Gamepads.gamepad2().rightBumper()
+//                .whenBecomesTrue(SubServoTurret.INSTANCE.testing2)
+//                .whenBecomesFalse(SubServoTurret.INSTANCE.middle);
 
 
 
@@ -98,6 +101,9 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
+        PedroComponent.follower().update();
+        double desPos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
+        SubServoTurret.INSTANCE.setPos(desPos);
         //gamepad1.runRumbleEffect(customRumbleEffect);
         laser.update();
         //double pos = SubServoTurret.INSTANCE.calculate(example);
@@ -134,6 +140,9 @@ public class LobsterTele extends NextFTCOpMode{
         } else if (!gamepad2.x){
             SubShoot.INSTANCE.setPIDTRUE(false);
         }
+        telemetry.addData("des pos", desPos);
+        telemetry.addData("turret target ange", SubServoTurret.INSTANCE.getTurretTargetAngle());
+        telemetry.addData("botpos", PedroComponent.follower().getPose());
         telemetry.addData("Laser Beam State", laser.getState() ? "DETECTED" : "CLEAR");
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
