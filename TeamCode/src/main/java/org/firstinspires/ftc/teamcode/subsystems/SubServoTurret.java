@@ -23,10 +23,10 @@ public class SubServoTurret implements Subsystem {
     public Command testing2 = new SetPosition(turret1, 0.14).requires(this);
     public Command middle = new SetPosition(turret1, 0.502).requires(this);
 
-    // Set to 180 only if the turret physically points BACKWARD at servo-center (SERVO_CENTER).
-    // 0 = turret points along robot-forward at center. This replaces the old hidden -180 flip
-    // that normalizeAngle() used to bake in.
-    private static final double MOUNT_OFFSET_DEG = 0;
+    // Turret centers pointing BACKWARD (servo-center SERVO_CENTER faces the rear of the robot),
+    // so goal-directly-behind (relative bearing 180) maps to turretTargetAngle 0 / servo-center.
+    // 0 would mean the turret centers along robot-forward instead.
+    private static final double MOUNT_OFFSET_DEG = 180;
     private static final double SERVO_SLOPE  = -0.002014;
     private static final double SERVO_CENTER =  0.5023;
 
