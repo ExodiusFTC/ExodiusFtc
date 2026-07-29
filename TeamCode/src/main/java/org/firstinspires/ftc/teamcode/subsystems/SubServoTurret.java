@@ -25,9 +25,25 @@ public class SubServoTurret implements Subsystem {
     // Set to 180 only if the turret physically points BACKWARD at servo-center (SERVO_CENTER).
     // 0 = turret points along robot-forward at center. This replaces the old hidden -180 flip
     // that normalizeAngle() used to bake in.
+    public double calculate(Pose botPose){
+        double dx = BLUEGOAL.getX() - botPose.getX();
+        double dy = BLUEGOAL.getY() - botPose.getY();
+        double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
+        double robotHeading = Math.toDegrees(botPose.getHeading());
+        double turretTargetAngle = fieldAngleToGoal - robotHeading;
+        double CorrectTurning = normalizeAngle(turretTargetAngle);
+        double despos = 0.00201389*CorrectTurning+0.502333;
+        return despos;
+    }
 
     public void setPos(double servo1pos){
         turretsetpos = servo1pos;
+    }
+    double normalizeAngle(double angle) {
+        angle = -1 * (180 - angle);
+        while (angle > 180) angle -= 360;
+        while (angle < -180) angle += 360;
+        return angle;
     }
 
 

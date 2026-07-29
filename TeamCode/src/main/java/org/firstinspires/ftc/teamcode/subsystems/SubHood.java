@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.hardware.impl.ServoEx;
@@ -15,7 +17,8 @@ public class SubHood implements Subsystem {
     public Command HoodInterpolation(){
         return new SetPosition(Hood, hoodtune).requires(this);
     }
-    public Command autohood = new SetPosition(Hood, 0.1).requires(this);
+    public Command autohood = new SetPosition(Hood, 0.22).requires(this);
+    public Command autohood2 = new SetPosition(Hood, 0.5).requires(this);
     public void sethoodtune(double tunevalue){
         hoodtune = tunevalue;
     }

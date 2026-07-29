@@ -101,12 +101,14 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
         return new SequentialGroup(
                 SubHood.INSTANCE.autohood,
                 SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake),
-                new FollowPath(chain1),
+                new FollowPath(chain1).and(SubShoot.INSTANCE.PIDshot),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.5),
                 SubRamp.INSTANCE.RampDown,
                 new FollowPath(chain2),
-                new FollowPath(chain3)
+                new FollowPath(chain3).and(SubShoot.INSTANCE.PIDfarShot),
+                new Delay(0.2),
+                SubRamp.INSTANCE.RampUp
 //                new FollowPath(chain4),
 //                new FollowPath(chain5),
 //                new FollowPath(chain6),
@@ -138,11 +140,13 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
         buildPaths();
         PedroComponent.follower().update();
         autonomousRoutine().schedule();
-        SubShoot.INSTANCE.PIDshot.schedule();
     }
 
     @Override
     public void onUpdate(){
+        PedroComponent.follower().update();
+        double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
+        SubServoTurret.INSTANCE.setPos(despos);
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
         telemetry.update();
     }
