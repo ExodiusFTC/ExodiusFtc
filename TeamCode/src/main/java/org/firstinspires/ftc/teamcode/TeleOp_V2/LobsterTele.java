@@ -66,8 +66,6 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onInit(){
-        SubShoot.INSTANCE.initlut();
-        SubHood.INSTANCE.initLut();
         laser = new LaserSubsystem(hardwareMap);
         PedroComponent.follower().setStartingPose(startingPose);
         customRumbleEffect = new Gamepad.RumbleEffect.Builder()
@@ -106,9 +104,8 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
+        double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
         PedroComponent.follower().update();
-        shootertune  = SubShoot.INSTANCE.getlutVel(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
-        hoodtune = SubHood.INSTANCE.getHoodlut(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
 
         SubServoTurret.INSTANCE.setPos(turrettune);
         //gamepad1.runRumbleEffect(customRumbleEffect);
@@ -119,8 +116,10 @@ public class LobsterTele extends NextFTCOpMode{
         if (gamepad1.dpadUpWasPressed()){
             PedroComponent.follower().setPose(startingPose);
         }
+        hoodtune = SubHood.INSTANCE.getHoodlut(distFromGoal);
         SubHood.INSTANCE.sethoodtune(hoodtune);
         SubHood.INSTANCE.HoodInterpolation().schedule();
+        shootertune = SubShoot.INSTANCE.getShotvel(distFromGoal);
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);

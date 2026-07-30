@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
-import static org.firstinspires.ftc.teamcode.TeleOp_V2.LobsterTele.BLUEGOAL;
-
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -131,8 +129,6 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onInit(){
-        SubShoot.INSTANCE.initlut();
-        SubHood.INSTANCE.initLut();
         Initialize().schedule();
         PedroComponent.follower().setPose(startPose);
     }
@@ -150,11 +146,6 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
         PedroComponent.follower().update();
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
-        double shootertune  = SubShoot.INSTANCE.getlutVel(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
-        double hoodtune = SubHood.INSTANCE.getHoodlut(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
-        SubShoot.INSTANCE.setTargetvelocity(shootertune);
-        SubShoot.INSTANCE.InterpolationTuning().schedule();
-        SubHood.INSTANCE.HoodInterpolation().schedule();
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
         telemetry.update();
     }

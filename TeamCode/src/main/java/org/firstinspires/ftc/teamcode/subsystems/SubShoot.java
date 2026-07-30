@@ -13,7 +13,6 @@ import dev.nextftc.hardware.controllable.RunToVelocity;
 import dev.nextftc.hardware.impl.MotorEx;
 
 import dev.nextftc.hardware.powerable.SetPower;
-import com.seattlesolvers.solverslib.util.InterpLUT;
 
 
 @Config
@@ -30,7 +29,6 @@ public class SubShoot implements Subsystem {
     double shottune;
     double hoodtune;
     double goalDist;
-    InterpLUT vellut = new InterpLUT();
 
 
     private ControlSystem controlSystem = ControlSystem.builder()
@@ -61,25 +59,8 @@ public class SubShoot implements Subsystem {
 
         return shottune;
     }
-    public void setDist(double dist){
-        goalDist = dist;
-    }
-    public double getlutVel(double goalDist){
-        return vellut.get(goalDist);
-    }
-    public void initlut(){
-        vellut = new InterpLUT();   // reset: INSTANCE is a persistent singleton, so re-init must
-        vellut.add(10, -1250);                            // rebuild rather than append (else X values stop increasing -> crash)
-        vellut.add(44, -1250);
-        vellut.add(60, -1300);
-        vellut.add(80, -1450);
-        vellut.add(96, -1559);
-        vellut.add(115, -1750);
-        vellut.add(125, -1800);
-        vellut.add(142, -1950);
-        vellut.add(158, -2000);
-        vellut.add(182, -2200);
-        vellut.createLUT();
+    public double getShotvel(double dist){
+        return -7.15754*dist -897.57123;
     }
 
 
@@ -89,16 +70,6 @@ public class SubShoot implements Subsystem {
 
     @Override
     public void initialize() {
-//        vellut.add(44, -1250);
-//        vellut.add(60, -1300);
-//        vellut.add(80, -1450);
-//        vellut.add(96, -1559);
-//        vellut.add(115, -1750);
-//        vellut.add(125, -1800);
-//        vellut.add(142, -1950);
-//        vellut.add(158, -2000);
-//        vellut.add(182, -2200);
-//        vellut.createLUT();
         // initialization logic (runs on init)
 
         //shooterMotor.getMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
