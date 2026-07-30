@@ -209,7 +209,7 @@ public class interpolationtest extends NextFTCOpMode {
 
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Distance to blue goal", DISTANCETOBLUEGOAL);
-        telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
+        //telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodlut());
         telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());
         telemetry.update();
 

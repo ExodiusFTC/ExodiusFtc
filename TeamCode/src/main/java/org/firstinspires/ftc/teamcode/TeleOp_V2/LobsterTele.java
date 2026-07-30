@@ -66,6 +66,8 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onInit(){
+        SubShoot.INSTANCE.initlut();
+        SubHood.INSTANCE.initLut();
         laser = new LaserSubsystem(hardwareMap);
         PedroComponent.follower().setStartingPose(startingPose);
         customRumbleEffect = new Gamepad.RumbleEffect.Builder()
@@ -105,6 +107,9 @@ public class LobsterTele extends NextFTCOpMode{
     @Override
     public void onUpdate(){
         PedroComponent.follower().update();
+        shootertune  = SubShoot.INSTANCE.getlutVel(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
+        hoodtune = SubHood.INSTANCE.getHoodlut(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
+
         if (gamepad2.dpadDownWasPressed()){
             turrettune += 0.05;
         }
@@ -117,18 +122,19 @@ public class LobsterTele extends NextFTCOpMode{
         //double pos = SubServoTurret.INSTANCE.calculate(example);
         //SubServoTurret.INSTANCE.setPos(pos);
 
-        if (gamepad2.aWasPressed()){
-            shootertune += 50;
-        }
-        if (gamepad2.bWasPressed()){
-            shootertune -= 50;
-        }
-        if (gamepad1.leftBumperWasPressed()){
-            hoodtune +=0.05;
-        }
-        if (gamepad1.rightBumperWasPressed()){
-            hoodtune -=0.05;
-        }
+//        if (gamepad2.aWasPressed()){
+//            shootertune += 50;
+//        }
+//        if (gamepad2.bWasPressed()){
+//            shootertune -= 50;
+//        }
+
+//        if (gamepad1.leftBumperWasPressed()){
+//            hoodtune +=0.05;
+//        }
+//        if (gamepad1.rightBumperWasPressed()){
+//            hoodtune -=0.05;
+//        }
         if (gamepad1.aWasPressed()){
             ramptune +=0.05;
         }
@@ -136,8 +142,8 @@ public class LobsterTele extends NextFTCOpMode{
             ramptune -=0.05;
         }
         SubHood.INSTANCE.sethoodtune(hoodtune);
-        SubShoot.INSTANCE.setTargetvelocity(shootertune);
         SubHood.INSTANCE.HoodInterpolation().schedule();
+        SubShoot.INSTANCE.setTargetvelocity(shootertune);
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
         //SubRamp.INSTANCE.Ramptune(ramptune).schedule();
@@ -158,14 +164,13 @@ public class LobsterTele extends NextFTCOpMode{
         } else if (!gamepad2.x){
             SubShoot.INSTANCE.setPIDTRUE(false);
         }
-        telemetry.addData("turrettune", turrettune);
-        telemetry.addData("botpos", PedroComponent.follower().getPose());
-        telemetry.addData("Laser Beam State", laser.getState() ? "DETECTED" : "CLEAR");
+
+        telemetry.addData("dist from goal", PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
+        telemetry.addData("botpos", PedroComponent.follower().getPose().toString());
+        //telemetry.addData("Laser Beam State", laser.getState() ? "DETECTED" : "CLEAR");
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
         telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());
-        telemetry.addData("ramptune", SubRamp.INSTANCE.getUpPos());
-        telemetry.addData("ramptune2", SubRamp.INSTANCE.getDownPos());
         telemetry.update();
     }
 //    double normalizeAngle(double angle) {
