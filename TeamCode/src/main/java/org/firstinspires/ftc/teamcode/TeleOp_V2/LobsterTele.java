@@ -110,52 +110,22 @@ public class LobsterTele extends NextFTCOpMode{
         shootertune  = SubShoot.INSTANCE.getlutVel(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
         hoodtune = SubHood.INSTANCE.getHoodlut(PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
 
-        if (gamepad2.dpadDownWasPressed()){
-            turrettune += 0.05;
-        }
-        if(gamepad2.dpadUpWasPressed()){
-            turrettune-=0.05;
-        }
         SubServoTurret.INSTANCE.setPos(turrettune);
         //gamepad1.runRumbleEffect(customRumbleEffect);
         laser.update();
-        //double pos = SubServoTurret.INSTANCE.calculate(example);
-        //SubServoTurret.INSTANCE.setPos(pos);
 
-//        if (gamepad2.aWasPressed()){
-//            shootertune += 50;
-//        }
-//        if (gamepad2.bWasPressed()){
-//            shootertune -= 50;
-//        }
 
-//        if (gamepad1.leftBumperWasPressed()){
-//            hoodtune +=0.05;
-//        }
-//        if (gamepad1.rightBumperWasPressed()){
-//            hoodtune -=0.05;
-//        }
-        if (gamepad1.aWasPressed()){
-            ramptune +=0.05;
-        }
-        if (gamepad1.bWasPressed()){
-            ramptune -=0.05;
+
+        if (gamepad1.dpadUpWasPressed()){
+            PedroComponent.follower().setPose(startingPose);
         }
         SubHood.INSTANCE.sethoodtune(hoodtune);
         SubHood.INSTANCE.HoodInterpolation().schedule();
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
-        //SubRamp.INSTANCE.Ramptune(ramptune).schedule();
 
-//        double dx = BLUEGOAL.getX() - PedroComponent.follower().getPose().getX();
-//        double dy = BLUEGOAL.getY() - PedroComponent.follower().getPose().getY();
-//        double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
-//        double robotHeading = Math.toDegrees(PedroComponent.follower().getHeading());
-//        double turretTargetAngle = fieldAngleToGoal - robotHeading;
-//        double CorrectTurning = normalizeAngle(turretTargetAngle);
-//        double despos = 0.00201389*CorrectTurning+0.502333;
-//        SubServoTurret.INSTANCE.setPos(despos);
+
 
 
         if (gamepad2.x){
@@ -173,11 +143,6 @@ public class LobsterTele extends NextFTCOpMode{
         telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());
         telemetry.update();
     }
-//    double normalizeAngle(double angle) {
-//        angle = -1 * (180 - angle);
-//        while (angle > 180) angle -= 360;
-//        while (angle < -180) angle += 360;
-//        return angle;
-//    }
+
 
 }
