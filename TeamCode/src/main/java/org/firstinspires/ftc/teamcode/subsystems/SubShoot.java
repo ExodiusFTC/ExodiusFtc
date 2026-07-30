@@ -68,6 +68,8 @@ public class SubShoot implements Subsystem {
         return vellut.get(goalDist);
     }
     public void initlut(){
+        vellut = new InterpLUT();   // reset: INSTANCE is a persistent singleton, so re-init must
+                                    // rebuild rather than append (else X values stop increasing -> crash)
         vellut.add(44, -1250);
         vellut.add(60, -1300);
         vellut.add(80, -1450);
