@@ -21,6 +21,7 @@ import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
+import static org.firstinspires.ftc.teamcode.TeleOp_V2.LobsterTele.BLUEGOAL;
 
 @Autonomous(name = "LobsterCloseAutoBlue")
 public class LobsterCloseAutoBlue extends NextFTCOpMode {
@@ -144,6 +145,12 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
     @Override
     public void onUpdate(){
         PedroComponent.follower().update();
+        double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
+        double hoodtune = SubHood.INSTANCE.getHoodlut(distFromGoal);
+        SubHood.INSTANCE.sethoodtune(hoodtune);
+        SubHood.INSTANCE.HoodInterpolation().schedule();
+        double shootertune = SubShoot.INSTANCE.getShotvel(distFromGoal);
+        SubShoot.INSTANCE.setTargetvelocity(shootertune);
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
