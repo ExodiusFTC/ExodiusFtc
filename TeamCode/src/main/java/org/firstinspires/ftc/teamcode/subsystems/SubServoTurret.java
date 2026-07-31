@@ -45,11 +45,16 @@ public class SubServoTurret implements Subsystem {
         while (angle < -180) angle += 360;
         return angle;
     }
+    public double getPos1(){
+        return turret1.getPosition();
+    }
+    public double getPos2(){
+        return turret2.getPosition();
+    }
 
 
     @Override
     public void initialize() {
-        // initialization logic (runs on init)
     }
     @Override
     public void periodic(){
@@ -57,6 +62,5 @@ public class SubServoTurret implements Subsystem {
         turret1Pos = turret1.getPosition();
         //turret1.setPosition(turret1Pos);
         turret2.setPosition(turret1Pos);
-        // periodic logic (runs every loop)
     }
 }

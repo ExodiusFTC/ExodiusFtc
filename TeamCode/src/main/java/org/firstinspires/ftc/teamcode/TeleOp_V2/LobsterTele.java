@@ -122,7 +122,10 @@ public class LobsterTele extends NextFTCOpMode{
         shootertune = SubShoot.INSTANCE.getShotvel(distFromGoal);
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
-        SubServoTurret.INSTANCE.setPos(despos);
+        if(gamepad2.a){
+            SubServoTurret.INSTANCE.setPos(despos);
+        }
+
 
 
 
@@ -136,6 +139,8 @@ public class LobsterTele extends NextFTCOpMode{
 
         telemetry.addData("dist from goal", PedroComponent.follower().getPose().distanceFrom(BLUEGOAL));
         telemetry.addData("botpos", PedroComponent.follower().getPose().toString());
+        telemetry.addData("turret1:", SubServoTurret.INSTANCE.getPos1());
+        telemetry.addData("turret2:", SubServoTurret.INSTANCE.getPos2());
         //telemetry.addData("Laser Beam State", laser.getState() ? "DETECTED" : "CLEAR");
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
