@@ -16,7 +16,7 @@ public class SubRamp implements Subsystem {
     private ServoEx RightRamp = new ServoEx("RRamp");
     private ServoEx LeftRamp = new ServoEx("LRamp");
 
-    public static final double UP_POS = 0.5;
+    public static final double UP_POS = 0.47;
     public static final double DOWN_POS = 0.62;
 
     public Command RampDown = new SetPosition(RightRamp,DOWN_POS).requires(this);

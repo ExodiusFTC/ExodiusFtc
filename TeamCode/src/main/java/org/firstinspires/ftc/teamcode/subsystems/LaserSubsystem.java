@@ -8,7 +8,6 @@ public class LaserSubsystem {
     private DigitalChannel laser;
     public boolean detected;
     private boolean lastState = false;
-    private int ballCount = 0;
     ElapsedTime elapsedTime = new ElapsedTime();
     public LaserSubsystem(HardwareMap hardwareMap){
         laser = hardwareMap.get(DigitalChannel.class, "laser");
@@ -16,23 +15,12 @@ public class LaserSubsystem {
     }
     public void update(){
         detected = laser.getState();
-        if (detected && !lastState){
-            ballCount++;
-        }
-        lastState = detected;
-
-
-        // if (detected){
-        //     elapsedTime.reset();
-        //     elapsedTime.startTime();
-        // }
-        // else{
-        //     elapsedTime.reset();
-        // }
     }
-    public boolean getState(){
+
+    public boolean getDetection(){
         return detected;
     }
+
 //    public int getBallCount(){
 //        return ballCount;
 //    }
@@ -40,6 +28,9 @@ public class LaserSubsystem {
          if (elapsedTime.seconds() > 1.0){
              return true;
          }
-         return false;
+         else {
+             return false;
+         }
+
      }
 }

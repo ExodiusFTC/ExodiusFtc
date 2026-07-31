@@ -36,9 +36,9 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     public final Pose startPose = new Pose(34, 133, Math.toRadians(270));
     public final Pose MoveForPreload = new Pose(24, 104, Math.toRadians(270));
-    public final Pose FirstStackPickup = new Pose(24, 85, Math.toRadians(270));
+    public final Pose FirstStackPickup = new Pose(23.5, 80, Math.toRadians(270));
     public final Pose ShootFirstStack = new Pose(52, 78, Math.toRadians(180));
-    public final Pose SecondStackPickup = new Pose(15, 62, Math.toRadians(180));
+    public final Pose SecondStackPickup = new Pose(16, 63, Math.toRadians(180));
     public final Pose ShootSecondStack = new Pose(57, 79, Math.toRadians(180));
     public final Pose GateIntake = new Pose(12, 58, Math.toRadians(145));
     public final Pose GateIntakeReturn1 = new Pose(57, 79, Math.toRadians(180));
@@ -97,6 +97,15 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
                 .setLinearHeadingInterpolation(GateIntake.getHeading(), GateIntakeReturn1.getHeading())
                 .build();
     }
+    private Command shootingsequence(){
+        return new SequentialGroup(
+                new Delay(0.2),
+                SubIntake.INSTANCE.stopTransfer.and(SubIntake.INSTANCE.StopIntake),
+                SubRamp.INSTANCE.RampUp,
+                SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake),
+                new Delay(1)
+        );
+    }
 
     private Command autonomousRoutine(){
         return new SequentialGroup(
@@ -107,12 +116,15 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
                 SubRamp.INSTANCE.RampDown,
                 new FollowPath(chain2),
                 new FollowPath(chain3),
+                shootingsequence(),
+                new FollowPath(chain4).and(SubRamp.INSTANCE.RampDown),
+                new FollowPath(chain5),
+                shootingsequence(),
+                new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
+                new Delay(1.25),
+                new FollowPath(chain7),
                 new Delay(0.2),
                 SubRamp.INSTANCE.RampUp
-//                new FollowPath(chain4),
-//                new FollowPath(chain5),
-//                new FollowPath(chain6),
-//                new FollowPath(chain7)
         );
     }
 
@@ -130,6 +142,9 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onInit(){
+        SubShoot.INSTANCE.setPIDTRUE(false);
+        SubHood.INSTANCE.initLut();
+        SubShoot.INSTANCE.initlut();
         Initialize().schedule();
         PedroComponent.follower().setPose(startPose);
     }
@@ -144,13 +159,15 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onUpdate(){
+        SubShoot.INSTANCE.setPIDTRUE(true);
         PedroComponent.follower().update();
         double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
         double hoodtune = SubHood.INSTANCE.getHoodlut(distFromGoal);
         SubHood.INSTANCE.sethoodtune(hoodtune);
         SubHood.INSTANCE.HoodInterpolation().schedule();
-        double shootertune = SubShoot.INSTANCE.getShotvel(distFromGoal);
+        double shootertune = SubShoot.INSTANCE.getlutVel(distFromGoal);
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
+        SubShoot.INSTANCE.InterpolationTuning().schedule();
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
