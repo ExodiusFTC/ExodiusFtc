@@ -1,17 +1,26 @@
 package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
+import static org.firstinspires.ftc.teamcode.TeleOp_V2.LobsterTele.BLUEGOAL;
+
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.LaserSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
 import org.firstinspires.ftc.teamcode.subsystems.SubRamp;
 import org.firstinspires.ftc.teamcode.subsystems.SubServoTurret;
 import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
+
+import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.delays.WaitUntil;
+import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
@@ -28,47 +37,111 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
     }
 
     public final Pose startPose = new Pose(44, 9, Math.toRadians(90));
-    public final Pose ThirdStack_PickUP = new Pose(23, 27, Math.toRadians(90));
-    public final Pose BackFromThirdStack = new Pose(49, 10, Math.toRadians(180));
+    public final Pose firstShot = new Pose(44, 14, Math.toRadians(90));
+    public final Pose ThirdStack_PickUP = new Pose(23, 33, Math.toRadians(90));
+    public final Pose BackFromThirdStack = new Pose(44, 14, Math.toRadians(180));
     public final Pose HumanPlayer_PickUp = new Pose(8, 9, Math.toRadians(180));
-    public final Pose BackFromHumanPlayer = new Pose(45, 10, Math.toRadians(180));
+    public final Pose BackFromHumanPlayer = new Pose(45, 12, Math.toRadians(180));
 
-    private Path path1;
-    private Path path2;
-    private Path path3;
-    private Path path4;
+    private PathChain chain1;
+    private PathChain chain35;
+    private PathChain chain2;
+    private PathChain chain3;
+    private PathChain chain4;
 
     public void buildPaths(){
 
-        path1 = new Path(new BezierLine(startPose, ThirdStack_PickUP));
-        path1.setLinearHeadingInterpolation(startPose.getHeading(), ThirdStack_PickUP.getHeading());
+        chain1 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierLine(firstShot, ThirdStack_PickUP))
+                .setLinearHeadingInterpolation(startPose.getHeading(), ThirdStack_PickUP.getHeading())
+                .build();
+        chain35 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierLine(startPose, firstShot))
+                .setConstantHeadingInterpolation(Math.toRadians(90))
+                .build();
 
-        path2 = new Path(new BezierLine(ThirdStack_PickUP, BackFromThirdStack));
-        path2.setLinearHeadingInterpolation(ThirdStack_PickUP.getHeading(), BackFromThirdStack.getHeading());
 
-        path3 = new Path(new BezierLine(BackFromThirdStack, HumanPlayer_PickUp));
-        path3.setLinearHeadingInterpolation(BackFromThirdStack.getHeading(), HumanPlayer_PickUp.getHeading());
-        path3.getReversed();
+        chain2 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierLine(ThirdStack_PickUP, BackFromThirdStack))
+                .setLinearHeadingInterpolation(ThirdStack_PickUP.getHeading(), BackFromThirdStack.getHeading())
+                .build();
 
-        path4 = new Path(new BezierLine(HumanPlayer_PickUp, BackFromHumanPlayer));
-        path4.setLinearHeadingInterpolation(HumanPlayer_PickUp.getHeading(), BackFromHumanPlayer.getHeading());
-        path4.getReversed();
+        chain3 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierLine(BackFromThirdStack, HumanPlayer_PickUp))
+                .setLinearHeadingInterpolation(BackFromThirdStack.getHeading(), HumanPlayer_PickUp.getHeading())
+                .build();
+
+        chain4 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierLine(HumanPlayer_PickUp, BackFromHumanPlayer))
+                .setLinearHeadingInterpolation(HumanPlayer_PickUp.getHeading(), BackFromHumanPlayer.getHeading())
+                .build();
+    }
+
+    private Command autonomousRoutine(){
+        return new SequentialGroup(
+                SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake)),
+                new FollowPath(chain35),
+                new WaitUntil(() -> (SubShoot.INSTANCE.getvel() - SubShoot.INSTANCE.getlutVel(startPose.distanceFrom(BLUEGOAL))) <= 50),
+                SubRamp.INSTANCE.RampUp,
+                new Delay(0.5),
+                SubRamp.INSTANCE.RampDown,
+                new FollowPath(chain1),
+                new Delay(0.2),
+                new FollowPath(chain2),
+                new Delay(0.2),
+                SubRamp.INSTANCE.RampUp
+//                new FollowPath(chain3),
+//                new FollowPath(chain4)
+        );
+    }
+
+    private Command Initialize(){
+        return new SequentialGroup(
+                SubIntake.INSTANCE.HoldIntake,
+                SubIntake.INSTANCE.StopIntake,
+                SubIntake.INSTANCE.transferIntake,
+                SubIntake.INSTANCE.stopTransfer,
+                SubRamp.INSTANCE.RampUp,
+                SubRamp.INSTANCE.RampDown,
+                SubShoot.INSTANCE.StopShoot
+        );
     }
 
     @Override
     public void onInit(){
+        SubShoot.INSTANCE.setPIDTRUE(false);
+        SubHood.INSTANCE.initLut();
+        SubShoot.INSTANCE.initlut();
+        Initialize().schedule();
         PedroComponent.follower().setPose(startPose);
-        buildPaths();
     }
 
     @Override
     public void onStartButtonPressed() {
+        buildPaths();
+        PedroComponent.follower().update();
+        autonomousRoutine().schedule();
     }
 
     @Override
     public void onUpdate(){
+
+        SubShoot.INSTANCE.setPIDTRUE(true);
         PedroComponent.follower().update();
+        double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
+        double hoodtune = SubHood.INSTANCE.getHoodlut(distFromGoal);
+        SubHood.INSTANCE.sethoodtune(hoodtune);
+        SubHood.INSTANCE.HoodInterpolation().schedule();
+        double shootertune = SubShoot.INSTANCE.getlutVel(distFromGoal);
+        SubShoot.INSTANCE.setTargetvelocity(shootertune);
+        SubShoot.INSTANCE.InterpolationTuning().schedule();
+        double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
+        SubServoTurret.INSTANCE.setPos(despos);
+
+
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
+        telemetry.addData("targ vel", shootertune);
+        telemetry.addData("shooter vel", SubShoot.INSTANCE.getvel());
         telemetry.update();
     }
 

@@ -27,7 +27,7 @@ public class LaserSubsystem {
      public boolean threeBalls(){
         if (detected){
             elapsedTime.startTime();
-            if (elapsedTime.time()>=0.3){
+            if (elapsedTime.time()>=0.2){
                 return true;
             }
             else {

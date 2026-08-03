@@ -34,7 +34,7 @@ public class SubHood implements Subsystem {
     public void initLut(){
         hoodlut = new InterpLUT();   // reset: INSTANCE is a persistent singleton, so re-init must
         // rebuild rather than append (else X values stop increasing -> crash)
-        hoodlut.add(44, 0.06);
+        hoodlut.add(44, 0.04);
         hoodlut.add(60, 0.4);
         hoodlut.add(80, 0.5);
         hoodlut.add(96, 0.55);

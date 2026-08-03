@@ -105,13 +105,14 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
+        laser.update();
         boolean threeballs = laser.threeBalls();
         double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
         PedroComponent.follower().update();
 
         SubServoTurret.INSTANCE.setPos(turrettune);
         //gamepad1.runRumbleEffect(customRumbleEffect);
-        laser.update();
+
 
 
 
