@@ -25,12 +25,22 @@ public class LaserSubsystem {
 //        return ballCount;
 //    }
      public boolean threeBalls(){
-         if (elapsedTime.seconds() > 1.0){
-             return true;
-         }
-         else {
-             return false;
-         }
+        if (detected){
+            elapsedTime.startTime();
+            if (elapsedTime.time()>=0.3){
+                return true;
+            }
+            else {
+                return false;
+            }
 
-     }
+        }
+        else{
+            elapsedTime.reset();
+            return false;
+        }
+     };
+
+
+
 }

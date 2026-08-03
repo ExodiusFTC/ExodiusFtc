@@ -46,7 +46,6 @@ public class LobsterTele extends NextFTCOpMode{
     public static Pose BLUEGOAL = new Pose(0, 144, Math.toRadians(0));
 
 
-    private LaserSubsystem Laser;
     double robotHeading;
     public double shootertune = 0;
     public double hoodtune = 0.5;
@@ -106,6 +105,7 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
+        boolean threeballs = laser.threeBalls();
         double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
         PedroComponent.follower().update();
 
@@ -143,7 +143,8 @@ public class LobsterTele extends NextFTCOpMode{
         telemetry.addData("botpos", PedroComponent.follower().getPose().toString());
         telemetry.addData("turret1:", SubServoTurret.INSTANCE.getPos1());
         telemetry.addData("turret2:", SubServoTurret.INSTANCE.getPos2());
-        //telemetry.addData("Laser Beam State", laser.getDetection());
+        telemetry.addData("Laser Beam State", laser.getDetection());
+        telemetry.addData("Three Balls", threeballs);
         telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
         telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
         telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());

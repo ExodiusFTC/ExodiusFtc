@@ -6,6 +6,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.LaserSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SubHood;
 import org.firstinspires.ftc.teamcode.subsystems.SubIntake;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SubShoot;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.FollowPath;
@@ -25,6 +27,8 @@ import static org.firstinspires.ftc.teamcode.TeleOp_V2.LobsterTele.BLUEGOAL;
 
 @Autonomous(name = "LobsterCloseAutoBlue")
 public class LobsterCloseAutoBlue extends NextFTCOpMode {
+    private LaserSubsystem laser;
+
 
     public LobsterCloseAutoBlue(){
         addComponents(
@@ -107,6 +111,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
         );
     }
 
+
     private Command autonomousRoutine(){
         return new SequentialGroup(
                 SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake),
@@ -142,6 +147,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onInit(){
+        laser = new LaserSubsystem(hardwareMap);
         SubShoot.INSTANCE.setPIDTRUE(false);
         SubHood.INSTANCE.initLut();
         SubShoot.INSTANCE.initlut();
@@ -159,6 +165,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onUpdate(){
+        boolean threeballs = laser.threeBalls();
         SubShoot.INSTANCE.setPIDTRUE(true);
         PedroComponent.follower().update();
         double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
@@ -171,6 +178,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
         double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
         telemetry.addData("Robot Pos", PedroComponent.follower().getPose().toString());
+        telemetry.addData("threeballs", threeballs);
         telemetry.update();
     }
 
