@@ -21,7 +21,7 @@ public class Constants {
 
     // strafer chassis with battery and pinpoint + 2 odo wheels is 5.35239 kg
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(5)
+            .forwardPodY(4.8)
             .strafePodX(-5.5)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
@@ -55,7 +55,7 @@ public class Constants {
 
 
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.95, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.92, 100, 1, 1);
 
 
     public static Follower createFollower(HardwareMap hardwareMap) {

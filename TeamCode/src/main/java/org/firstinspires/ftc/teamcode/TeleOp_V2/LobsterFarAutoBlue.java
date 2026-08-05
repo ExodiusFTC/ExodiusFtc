@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp_V2;
 
 import static org.firstinspires.ftc.teamcode.TeleOp_V2.LobsterTele.BLUEGOAL;
 
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -36,10 +37,10 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
         );
     }
 
-    public final Pose startPose = new Pose(44, 9, Math.toRadians(90));
+    public final Pose startPose = new Pose(56, 9, Math.toRadians(90));
     public final Pose firstShot = new Pose(44, 14, Math.toRadians(90));
-    public final Pose ThirdStack_PickUP = new Pose(23, 33, Math.toRadians(90));
-    public final Pose BackFromThirdStack = new Pose(44, 14, Math.toRadians(180));
+    public final Pose ThirdStack_PickUP = new Pose(10, 34, Math.toRadians(180));
+    public final Pose BackFromThirdStack = new Pose(47, 16, Math.toRadians(180));
     public final Pose HumanPlayer_PickUp = new Pose(8, 9, Math.toRadians(180));
     public final Pose BackFromHumanPlayer = new Pose(45, 12, Math.toRadians(180));
 
@@ -52,23 +53,25 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
     public void buildPaths(){
 
         chain1 = PedroComponent.follower().pathBuilder()
-                .addPath(new BezierLine(firstShot, ThirdStack_PickUP))
+                .addPath(new BezierCurve(firstShot, new Pose(56, 32), ThirdStack_PickUP))
                 .setLinearHeadingInterpolation(startPose.getHeading(), ThirdStack_PickUP.getHeading())
                 .build();
         chain35 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(startPose, firstShot))
                 .setConstantHeadingInterpolation(Math.toRadians(90))
+                .setTimeoutConstraint(1000)
                 .build();
 
 
         chain2 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(ThirdStack_PickUP, BackFromThirdStack))
-                .setLinearHeadingInterpolation(ThirdStack_PickUP.getHeading(), BackFromThirdStack.getHeading())
+                .setTangentHeadingInterpolation()
+                .setReversed()
                 .build();
 
         chain3 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(BackFromThirdStack, HumanPlayer_PickUp))
-                .setLinearHeadingInterpolation(BackFromThirdStack.getHeading(), HumanPlayer_PickUp.getHeading())
+                .setConstantHeadingInterpolation(HumanPlayer_PickUp.getHeading())
                 .build();
 
         chain4 = PedroComponent.follower().pathBuilder()
@@ -81,17 +84,21 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
         return new SequentialGroup(
                 SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake)),
                 new FollowPath(chain35),
-                new WaitUntil(() -> (SubShoot.INSTANCE.getvel() - SubShoot.INSTANCE.getlutVel(startPose.distanceFrom(BLUEGOAL))) <= 50),
+                new WaitUntil(() -> (Math.abs(SubShoot.INSTANCE.getvel() - SubShoot.INSTANCE.getlutVel(startPose.distanceFrom(BLUEGOAL)))) <= 50),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.5),
-                SubRamp.INSTANCE.RampDown,
+                SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.slowTransfer),
                 new FollowPath(chain1),
-                new Delay(0.2),
                 new FollowPath(chain2),
-                new Delay(0.2),
+                new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
+                SubRamp.INSTANCE.RampUp,
+                new Delay(0.4),
+                SubRamp.INSTANCE.RampDown,
+                new FollowPath(chain3).and(SubIntake.INSTANCE.slowTransfer),
+                new Delay(0.3),
+                new FollowPath(chain4).and(SubIntake.INSTANCE.transferIntake),
+                new Delay(0.1),
                 SubRamp.INSTANCE.RampUp
-//                new FollowPath(chain3),
-//                new FollowPath(chain4)
         );
     }
 
