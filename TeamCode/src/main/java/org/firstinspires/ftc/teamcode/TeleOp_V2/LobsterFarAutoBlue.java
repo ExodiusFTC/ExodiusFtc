@@ -30,6 +30,8 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 @Autonomous(name = "LobsterFarAutoBlue")
 public class LobsterFarAutoBlue extends NextFTCOpMode {
     private ArtifactVision artifactVision;
+    private LaserSubsystem laser;
+
 
 
     public LobsterFarAutoBlue(){
@@ -97,9 +99,9 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
                     Pose targetPose;
                     double targy = tx+9.2;
                     double acct = com.acmerobotics.roadrunner.Math.clamp(targy, 9.5, 80);
-                    targetPose = new Pose(9, acct, targetHeading);
-                    if(tx > 6){
-                        Path dynamicPath = new Path(new BezierCurve(currentPose,new Pose(70, 45), targetPose));
+                    targetPose = new Pose(7.5, acct, targetHeading);
+                    if(tx > 12){
+                        Path dynamicPath = new Path(new BezierCurve(currentPose,new Pose(60, 40), targetPose));
                         dynamicPath.setLinearHeadingInterpolation(currentPose.getHeading(), targetHeading);
 
                         followCmd = new FollowPath(dynamicPath);
@@ -113,7 +115,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
                     }
 
                 } else {
-                    Path dynamicPath = new Path(new BezierCurve(currentPose, new Pose(13,7), fallback));
+                    Path dynamicPath = new Path(new BezierCurve(currentPose, new Pose(10.5,7), fallback));
                     dynamicPath.setLinearHeadingInterpolation(currentPose.getHeading(), fallback.getHeading());
                     followCmd = new FollowPath(dynamicPath);
                 }
@@ -121,7 +123,13 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
             }
             @Override
             public void update() {
-                followCmd.update();
+                if (laser.threeBalls()){
+                    followCmd.stop(true);
+                }
+                else {
+                    followCmd.update();
+                }
+
             }
             @Override
             public boolean isDone() {
@@ -139,8 +147,8 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
             @Override
             public void start() {
                 Pose currentPose = PedroComponent.follower().getPose();
-                Path dynamicPath = new Path(new BezierLine(currentPose,BackFromThirdStack));
-                dynamicPath.setLinearHeadingInterpolation(currentPose.getHeading(), BackFromThirdStack.getHeading());
+                Path dynamicPath = new Path(new BezierLine(currentPose,BackFromHumanPlayer));
+                dynamicPath.setLinearHeadingInterpolation(currentPose.getHeading(), BackFromHumanPlayer.getHeading());
                 returning= new FollowPath(dynamicPath);
                 returning.start();
             }
@@ -180,13 +188,35 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
                 new Delay(0.1),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
+                SubIntake.INSTANCE.slowTransfer,
                 driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
-                new Delay(0.5),
-                returnPathing(),
-                new Delay(0.2),
-                SubRamp.INSTANCE.RampUp
-
-        );
+                new Delay(1),
+                returnPathing().and(SubIntake.INSTANCE.transferIntake),
+                new Delay(0.3),
+                SubRamp.INSTANCE.RampUp,
+                new Delay(0.4),
+                SubIntake.INSTANCE.slowTransfer,
+                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new Delay(1),
+                returnPathing().and(SubIntake.INSTANCE.transferIntake),
+                new Delay(0.3),
+                SubRamp.INSTANCE.RampUp,
+                new Delay(0.4),
+                SubIntake.INSTANCE.slowTransfer,
+                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new Delay(1),
+                returnPathing().and(SubIntake.INSTANCE.transferIntake),
+                new Delay(0.3),
+                SubRamp.INSTANCE.RampUp,
+                new Delay(0.4),
+                SubIntake.INSTANCE.slowTransfer,
+                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new Delay(1),
+                returnPathing().and(SubIntake.INSTANCE.transferIntake),
+                new Delay(0.3),
+                SubRamp.INSTANCE.RampUp,
+                new Delay(0.4)
+                );
     }
 
 
@@ -205,6 +235,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onInit(){
+        laser = new LaserSubsystem(hardwareMap);
         artifactVision = new ArtifactVision(hardwareMap, 0);
         SubShoot.INSTANCE.setPIDTRUE(false);
         SubHood.INSTANCE.initLut();
@@ -222,6 +253,8 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onUpdate(){
+        laser.update();
+        boolean threeballs = laser.threeBalls();
         artifactVision.update();
         SubShoot.INSTANCE.setPIDTRUE(true);
         PedroComponent.follower().update();

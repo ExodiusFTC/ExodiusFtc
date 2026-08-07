@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
+import com.seattlesolvers.solverslib.util.InterpLUT;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
@@ -18,9 +19,11 @@ public class SubServoTurret implements Subsystem {
     private SubServoTurret(){}
     private ServoEx turret1 = new ServoEx("turret");
     private ServoEx turret2 = new ServoEx("turret2");
-    public Command testing = new SetPosition(turret1, 0.865).requires(this);
-    public Command testing2 = new SetPosition(turret1, 0.14).requires(this);
-    public Command middle = new SetPosition(turret1, 0.502).requires(this);
+    public Command testing = new SetPosition(turret1, 0.865).requires(this); //+180
+    public Command testing2 = new SetPosition(turret1, 0.14).requires(this);  //-180
+    public Command middle = new SetPosition(turret1, 0.502).requires(this); //0
+    InterpLUT turretLut = new InterpLUT();
+
 
     // Set to 180 only if the turret physically points BACKWARD at servo-center (SERVO_CENTER).
     // 0 = turret points along robot-forward at center. This replaces the old hidden -180 flip
@@ -32,12 +35,12 @@ public class SubServoTurret implements Subsystem {
         double robotHeading = Math.toDegrees(botPose.getHeading());
         double turretTargetAngle = fieldAngleToGoal - robotHeading;
         double CorrectTurning = normalizeAngle(turretTargetAngle);
-        double despos = 0.00201389*CorrectTurning+0.502333;
-        return despos;
+        //double despos = 0.00201389*CorrectTurning+0.502333;
+        return CorrectTurning;
     }
 
     public void setPos(double servo1pos){
-        turretsetpos = servo1pos;
+        turretsetpos = turretLut.get(servo1pos);
     }
     double normalizeAngle(double angle) {
         angle = -1 * (180 - angle);
@@ -50,6 +53,13 @@ public class SubServoTurret implements Subsystem {
     }
     public double getPos2(){
         return turret2.getPosition();
+    }
+    public void initlut(){
+        turretLut = new InterpLUT();   // reset: INSTANCE is a persistent singleton, so re-init must
+        turretLut.add(-180, 0.14);
+        turretLut.add(0, 0.502);
+        turretLut.add(180, 0.867);
+        turretLut.createLUT();
     }
 
 

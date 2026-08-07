@@ -66,6 +66,7 @@ public class LobsterTele extends NextFTCOpMode{
     @Override
     public void onInit(){
         laser = new LaserSubsystem(hardwareMap);
+        SubServoTurret.INSTANCE.initlut();
         SubHood.INSTANCE.initLut();
         SubShoot.INSTANCE.initlut();
         PedroComponent.follower().setStartingPose(startingPose);
