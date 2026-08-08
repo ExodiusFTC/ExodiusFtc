@@ -12,7 +12,6 @@ import dev.nextftc.hardware.positionable.SetPosition;
 
 public class SubServoTurret implements Subsystem {
     public static Pose BLUEGOAL = new Pose(0, 144, Math.toRadians(0));
-    public static Pose REDGOAL = new Pose(144, 142, Math.toRadians(180));
 
     public double turret1Pos;
     public double turretsetpos;
@@ -37,16 +36,6 @@ public class SubServoTurret implements Subsystem {
         double turretTargetAngle = fieldAngleToGoal - robotHeading;
         double CorrectTurning = normalizeAngle(turretTargetAngle);
         //double despos = 0.00201389*CorrectTurning+0.502333;
-        return CorrectTurning;
-    }
-
-    public double calculateRed(Pose botPose){
-        double dx = REDGOAL.getX() - botPose.getX();
-        double dy = REDGOAL.getY() - botPose.getY();
-        double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
-        double robotHeading = Math.toDegrees(botPose.getHeading());
-        double turretTargetAngle = fieldAngleToGoal - robotHeading;
-        double CorrectTurning = normalizeAngle(turretTargetAngle);
         return CorrectTurning;
     }
 
