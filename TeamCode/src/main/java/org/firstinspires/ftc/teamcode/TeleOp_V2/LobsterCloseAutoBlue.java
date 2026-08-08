@@ -159,7 +159,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp
 
-                );
+        );
     }
 
     private Command Initialize(){

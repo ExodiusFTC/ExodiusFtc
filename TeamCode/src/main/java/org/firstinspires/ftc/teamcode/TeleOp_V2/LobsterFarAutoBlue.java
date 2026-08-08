@@ -216,7 +216,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
                 new Delay(0.3),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4)
-                );
+        );
     }
 
 
@@ -225,7 +225,6 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
         return new SequentialGroup(
                 SubIntake.INSTANCE.HoldIntake,
                 SubIntake.INSTANCE.StopIntake,
-                SubIntake.INSTANCE.transferIntake,
                 SubIntake.INSTANCE.stopTransfer,
                 SubRamp.INSTANCE.RampUp,
                 SubRamp.INSTANCE.RampDown,
@@ -238,6 +237,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
         laser = new LaserSubsystem(hardwareMap);
         artifactVision = new ArtifactVision(hardwareMap, 0);
         SubShoot.INSTANCE.setPIDTRUE(false);
+        SubServoTurret.INSTANCE.initlut();
         SubHood.INSTANCE.initLut();
         SubShoot.INSTANCE.initlut();
         Initialize().schedule();
@@ -253,6 +253,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
 
     @Override
     public void onUpdate(){
+        SubServoTurret.INSTANCE.initlut();
         laser.update();
         boolean threeballs = laser.threeBalls();
         artifactVision.update();

@@ -42,12 +42,12 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
     }
 
     public final Pose startPose = new Pose(108, 132, Math.toRadians(270));
-    public final Pose MoveForPreload = new Pose(118, 104, Math.toRadians(270));
+    public final Pose MoveForPreload = new Pose(118, 102, Math.toRadians(270));
     public final Pose FirstStackPickup = new Pose(118, 88, Math.toRadians(270));
     public final Pose ShootFirstStack = new Pose(89, 84, Math.toRadians(0));
     public final Pose SecondStackPickup = new Pose(131, 64, Math.toRadians(0));
     public final Pose ShootSecondStack = new Pose(90, 78, Math.toRadians(0));
-    public final Pose GateIntake = new Pose(141, 55.5, Math.toRadians(20));
+    public final Pose GateIntake = new Pose(134, 61, Math.toRadians(30));
     public final Pose GateIntakeReturn1 = new Pose(90, 85, Math.toRadians(45));
 
     private PathChain chain1;
@@ -97,14 +97,14 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
                 .build();
 
         chain6 = PedroComponent.follower().pathBuilder()
-                .addPath(new BezierLine(ShootSecondStack, GateIntake))
+                .addPath(new BezierCurve(ShootSecondStack, new Pose(117, 48), GateIntake))
                 .setLinearHeadingInterpolation(ShootSecondStack.getHeading(), GateIntake.getHeading())
                 .setTimeoutConstraint(500)
                 .build();
 
         chain7 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(GateIntake, GateIntakeReturn1))
-                .setConstantHeadingInterpolation(GateIntakeReturn1.getHeading())
+                .setLinearHeadingInterpolation(GateIntake.getHeading(), GateIntakeReturn1.getHeading())
                 .build();
     }
     private Command shootingsequence(){
