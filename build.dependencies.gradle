@@ -23,6 +23,7 @@ dependencies {
 
     implementation 'dev.nextftc:control:1.0.0'
     implementation 'dev.nextftc:core:1.0.1'
+    implementation 'com.pedropathing:ivy:1.0.0'
 
     //implementation 'dev.nextftc:control2:0.0.1'
     implementation 'dev.nextftc:bindings:1.0.1'
