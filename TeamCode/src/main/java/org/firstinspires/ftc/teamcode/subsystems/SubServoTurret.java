@@ -12,7 +12,7 @@ import dev.nextftc.hardware.positionable.SetPosition;
 
 public class SubServoTurret implements Subsystem {
     public static Pose BLUEGOAL = new Pose(0, 144, Math.toRadians(0));
-    public static Pose REDGOAL = new Pose(144, 144, Math.toRadians(180));
+    public static Pose REDGOAL = new Pose(144, 140, Math.toRadians(180));
 
     public double turret1Pos;
     public double turretsetpos;
@@ -30,8 +30,12 @@ public class SubServoTurret implements Subsystem {
     // 0 = turret points along robot-forward at center. This replaces the old hidden -180 flip
     // that normalizeAngle() used to bake in.
     public double calculate(Pose botPose){
-        double dx = BLUEGOAL.getX() - botPose.getX();
-        double dy = BLUEGOAL.getY() - botPose.getY();
+        double Offset_x = -2.40625 * Math.cos(botPose.getHeading());
+        double Offset_y = -2.40625 * Math.sin(botPose.getHeading());
+        double TurretPosX = PedroComponent.follower().getPose().getX() + Offset_x;
+        double TurretPosY = PedroComponent.follower().getPose().getY() + Offset_y;
+        double dx = BLUEGOAL.getX() - TurretPosX;
+        double dy = BLUEGOAL.getY() - TurretPosY;
         double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
         double robotHeading = Math.toDegrees(botPose.getHeading());
         double turretTargetAngle = fieldAngleToGoal - robotHeading;
@@ -41,8 +45,12 @@ public class SubServoTurret implements Subsystem {
     }
 
     public double calculateRed(Pose botPose){
-        double dx = REDGOAL.getX() - botPose.getX();
-        double dy = REDGOAL.getY() - botPose.getY();
+        double Offset_x = -2.40625 * Math.cos(botPose.getHeading());
+        double Offset_y = -2.40625 * Math.sin(botPose.getHeading());
+        double TurretPosX = PedroComponent.follower().getPose().getX() + Offset_x;
+        double TurretPosY = PedroComponent.follower().getPose().getY() + Offset_y;
+        double dx = REDGOAL.getX() - TurretPosX;
+        double dy = REDGOAL.getY() - TurretPosY;
         double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
         double robotHeading = Math.toDegrees(botPose.getHeading());
         double turretTargetAngle = fieldAngleToGoal - robotHeading;
@@ -69,7 +77,7 @@ public class SubServoTurret implements Subsystem {
         turretLut = new InterpLUT();   // reset: INSTANCE is a persistent singleton, so re-init must
         turretLut.add(-180, 0.14);
         turretLut.add(0, 0.502);
-        turretLut.add(180, 0.867);
+        turretLut.add(180, 0.875);
         turretLut.createLUT();
     }
 

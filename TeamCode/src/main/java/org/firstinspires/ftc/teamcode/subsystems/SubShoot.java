@@ -34,7 +34,7 @@ public class SubShoot implements Subsystem {
 
 
     private ControlSystem controlSystem = ControlSystem.builder()
-            .velPid(0.002, 0, 0)
+            .velPid(0.004, 0, 0)
             .basicFF(0.00036, 0, 0.14)
             .build();
 

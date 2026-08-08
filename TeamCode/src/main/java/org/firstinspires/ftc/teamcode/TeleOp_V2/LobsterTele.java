@@ -52,6 +52,8 @@ public class LobsterTele extends NextFTCOpMode{
     public double ramptune = 0.5;
     public boolean detected;
     public double turrettune = 0.502;
+    private boolean wasThreeBalls = false;
+
     Command transfer = new ParallelGroup(
             SubIntake.INSTANCE.HoldIntake,
             SubIntake.INSTANCE.transferIntake,
@@ -71,10 +73,7 @@ public class LobsterTele extends NextFTCOpMode{
         SubShoot.INSTANCE.initlut();
         PedroComponent.follower().setStartingPose(startingPose);
         customRumbleEffect = new Gamepad.RumbleEffect.Builder()
-                .addStep(0.0, 1.0, 1000)  //  Rumble right motor 100% for 1000 mSec
-                .addStep(0.0, 0.0, 1000)  //  Pause for 300 mSec
-                .addStep(1.0, 0.0, 1000)  //  Rumble left motor 100% for 1000 mSec
-                .addStep(1.0, 1.0, 1000) // run both for 1000 milliseconds
+                .addStep(1.0, 1.0, 2000) // run both for 1000 milliseconds
                 .build();
     }
 
@@ -108,6 +107,10 @@ public class LobsterTele extends NextFTCOpMode{
     public void onUpdate(){
         laser.update();
         boolean threeballs = laser.threeBalls();
+        if (threeballs && !wasThreeBalls) {
+            gamepad1.runRumbleEffect(customRumbleEffect);
+        }
+        wasThreeBalls = threeballs;
         double distFromGoal = PedroComponent.follower().getPose().distanceFrom(BLUEGOAL);
         PedroComponent.follower().update();
 

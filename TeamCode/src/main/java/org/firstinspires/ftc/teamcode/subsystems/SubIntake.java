@@ -34,7 +34,7 @@ public class SubIntake implements Subsystem {
     // KickUp - closes blocker
     public Command HoldIntake = new SetPower(IntakeMotor, 1).requires(this);
     public Command transferIntake = new SetPower(TransferMotor, -1).requires(this);
-    public Command slowTransfer = new SetPower(TransferMotor, -0.7).requires(this);
+    public Command slowTransfer = new SetPower(TransferMotor, -0.6).requires(this);
     public Command stopTransfer = new SetPower(TransferMotor, 0).requires(this);
     public Command StopIntake = new SetPower(IntakeMotor, 0).requires(this);
     public Command ReverseIntake = new SetPower(IntakeMotor, -1).requires(this);

@@ -40,8 +40,10 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
                 BulkReadComponent.INSTANCE
         );
     }
+    public static Pose REDGOAL = new Pose(144, 140, Math.toRadians(180));
 
-    public final Pose startPose = new Pose(108, 132, Math.toRadians(270));
+
+    public final Pose startPose = new Pose(111, 132, Math.toRadians(270));
     public final Pose MoveForPreload = new Pose(118, 102, Math.toRadians(270));
     public final Pose FirstStackPickup = new Pose(118, 88, Math.toRadians(270));
     public final Pose ShootFirstStack = new Pose(89, 84, Math.toRadians(0));
@@ -196,7 +198,7 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
         boolean threeballs = laser.threeBalls();
         SubShoot.INSTANCE.setPIDTRUE(true);
         PedroComponent.follower().update();
-        double distFromGoal = PedroComponent.follower().getPose().distanceFrom(RedGOAL);
+        double distFromGoal = PedroComponent.follower().getPose().distanceFrom(REDGOAL);
         double hoodtune = SubHood.INSTANCE.getHoodlut(distFromGoal);
         SubHood.INSTANCE.sethoodtune(hoodtune);
         SubHood.INSTANCE.HoodInterpolation().schedule();

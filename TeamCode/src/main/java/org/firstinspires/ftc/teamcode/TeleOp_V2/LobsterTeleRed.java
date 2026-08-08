@@ -42,7 +42,7 @@ public class LobsterTeleRed extends NextFTCOpMode{
                 BindingsComponent.INSTANCE
         );
     }
-    public static Pose startingPoseRed = new Pose(42, 87, Math.toRadians(180));
+    public static Pose startingPoseRed = new Pose(9, 9, Math.toRadians(180));
     public static Pose RedGOAL = new Pose(144, 144, Math.toRadians(180));
 
 
@@ -52,6 +52,8 @@ public class LobsterTeleRed extends NextFTCOpMode{
     public double ramptune = 0.5;
     public boolean detected;
     public double turrettune = 0.502;
+    private boolean wasThreeBalls = false;
+
     Command transfer = new ParallelGroup(
             SubIntake.INSTANCE.HoldIntake,
             SubIntake.INSTANCE.transferIntake,
@@ -66,6 +68,7 @@ public class LobsterTeleRed extends NextFTCOpMode{
     @Override
     public void onInit(){
         laser = new LaserSubsystem(hardwareMap);
+        SubServoTurret.INSTANCE.initlut();
         SubHood.INSTANCE.initLut();
         SubShoot.INSTANCE.initlut();
         PedroComponent.follower().setStartingPose(startingPoseRed);
@@ -108,11 +111,14 @@ public class LobsterTeleRed extends NextFTCOpMode{
     public void onUpdate(){
         laser.update();
         boolean threeballs = laser.threeBalls();
+        if (threeballs && !wasThreeBalls) {
+            gamepad1.runRumbleEffect(customRumbleEffect);
+        }
+        wasThreeBalls = threeballs;
         double distFromGoal = PedroComponent.follower().getPose().distanceFrom(RedGOAL);
         PedroComponent.follower().update();
 
         SubServoTurret.INSTANCE.setPos(turrettune);
-        //gamepad1.runRumbleEffect(customRumbleEffect);
 
 
 
