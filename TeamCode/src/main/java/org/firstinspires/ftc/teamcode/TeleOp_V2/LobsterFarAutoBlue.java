@@ -62,6 +62,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
         chain1 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierCurve(firstShot, new Pose(56, 32), ThirdStack_PickUP))
                 .setLinearHeadingInterpolation(startPose.getHeading(), ThirdStack_PickUP.getHeading())
+                .setTimeoutConstraint(500)
                 .build();
         chain35 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(startPose, firstShot))
@@ -170,9 +171,10 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
 
     private Command autonomousRoutine(){
         return new SequentialGroup(
-                SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.HoldIntake.and(SubIntake.INSTANCE.transferIntake)),
+                SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.HoldIntake),
+                SubIntake.INSTANCE.transferIntake,
                 new FollowPath(chain35),
-                new WaitUntil(() -> (Math.abs(SubShoot.INSTANCE.getvel() - SubShoot.INSTANCE.getlutVel(startPose.distanceFrom(BLUEGOAL)))) <= 50),
+                new Delay(2),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.5),
                 SubRamp.INSTANCE.RampDown.and(SubIntake.INSTANCE.slowTransfer),
