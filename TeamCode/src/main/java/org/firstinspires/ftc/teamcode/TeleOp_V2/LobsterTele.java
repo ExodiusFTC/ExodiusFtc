@@ -42,8 +42,8 @@ public class LobsterTele extends NextFTCOpMode{
                 BindingsComponent.INSTANCE
         );
     }
-    public static Pose startingPose = new Pose(9, 9, Math.toRadians(180));
-    public static Pose BLUEGOAL = new Pose(0, 144, Math.toRadians(0));
+    public static Pose startingPose = new Pose(136, 9, Math.toRadians(0));
+    public static Pose BLUEGOAL = new Pose(4, 140, Math.toRadians(0));
 
 
     double robotHeading;

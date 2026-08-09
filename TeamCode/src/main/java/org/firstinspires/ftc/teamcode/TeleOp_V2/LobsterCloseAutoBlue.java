@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SubTurret;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
+import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.FollowPath;
@@ -47,7 +48,7 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
     public final Pose ShootFirstStack = new Pose(52, 78, Math.toRadians(180));
     public final Pose SecondStackPickup = new Pose(16, 63, Math.toRadians(180));
     public final Pose ShootSecondStack = new Pose(57, 79, Math.toRadians(180));
-    public final Pose GateIntake = new Pose(11, 57, Math.toRadians(145));
+    public final Pose GateIntake = new Pose(10, 57, Math.toRadians(150));
     public final Pose GateIntakeReturn1 = new Pose(57, 79, Math.toRadians(180));
 
     private PathChain chain1;
@@ -121,6 +122,27 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
                 new Delay(0.4)
         );
     }
+    /*private Command GateIntaking(){
+        return new ParallelRaceGroup(
+                new WaitUntil(() -> {
+                        boolean balls = laser.threeBalls();
+                        return balls;
+        }),
+                new Delay(1.5)
+        );*/
+
+   /* private Command GateIntaking() {
+        return new ParallelRaceGroup(
+                new WaitUntil(() -> laser.threeBalls()),
+                new Delay(1.5)
+        );
+    }*/
+
+    private Command GateIntaking() {
+        return new ParallelRaceGroup(
+                new Delay(1.5)
+        );
+    }
 
 
     private Command autonomousRoutine(){
@@ -140,21 +162,24 @@ public class LobsterCloseAutoBlue extends NextFTCOpMode {
                 shootingsequence(),
                 SubIntake.INSTANCE.slowTransfer,
                 new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
-                new WaitUntil(() -> laser.threeBalls()),
+                new Delay(2),
+                //new WaitUntil(() -> laser.threeBalls()).raceWith(new Delay(1.5)),
                 new FollowPath(chain7),
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
                 new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
-                new WaitUntil(() -> laser.threeBalls()),
+                new Delay(2),
+                //new WaitUntil(() -> laser.threeBalls()).raceWith(new Delay(1.5)),
                 new FollowPath(chain7),
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
                 new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
-                new WaitUntil(() -> laser.threeBalls()),
+                new Delay(2),
+                //new WaitUntil(() -> laser.threeBalls()).raceWith(new Delay(1.5)),
                 new FollowPath(chain7),
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp

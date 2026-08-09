@@ -56,6 +56,8 @@ public class LobsterRedAutoFar extends NextFTCOpMode {
     private PathChain chain2;
     private PathChain chain3;
     private PathChain chain4;
+    private PathChain chain5;
+
 
     public void buildPaths(){
 
@@ -84,6 +86,10 @@ public class LobsterRedAutoFar extends NextFTCOpMode {
         chain4 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(HumanPlayer_PickUp, BackFromHumanPlayer))
                 .setLinearHeadingInterpolation(HumanPlayer_PickUp.getHeading(), BackFromHumanPlayer.getHeading())
+                .build();
+        chain5 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierCurve(BackFromHumanPlayer, new Pose(140, 2), fallback))
+                .setLinearHeadingInterpolation(HumanPlayer_PickUp.getHeading(), fallback.getHeading())
                 .build();
     }
     private Command driveToDetectedBallOrFallback() {
@@ -189,28 +195,32 @@ public class LobsterRedAutoFar extends NextFTCOpMode {
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
-                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                //driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new FollowPath(chain5).and(SubRamp.INSTANCE.RampDown),
                 new Delay(1),
                 returnPathing().and(SubIntake.INSTANCE.transferIntake),
                 new Delay(0.3),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
-                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                //driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new FollowPath(chain5).and(SubRamp.INSTANCE.RampDown),
                 new Delay(1),
                 returnPathing().and(SubIntake.INSTANCE.transferIntake),
                 new Delay(0.3),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
-                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new FollowPath(chain5).and(SubRamp.INSTANCE.RampDown),
+                //driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
                 new Delay(1),
                 returnPathing().and(SubIntake.INSTANCE.transferIntake),
                 new Delay(0.3),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
-                driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                //driveToDetectedBallOrFallback().and(SubRamp.INSTANCE.RampDown),
+                new FollowPath(chain5).and(SubRamp.INSTANCE.RampDown),
                 new Delay(1),
                 returnPathing().and(SubIntake.INSTANCE.transferIntake),
                 new Delay(0.3),

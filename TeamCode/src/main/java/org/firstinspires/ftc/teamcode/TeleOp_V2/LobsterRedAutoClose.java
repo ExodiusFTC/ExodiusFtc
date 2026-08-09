@@ -44,13 +44,15 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
 
 
     public final Pose startPose = new Pose(111, 132, Math.toRadians(270));
-    public final Pose MoveForPreload = new Pose(118, 102, Math.toRadians(270));
+    public final Pose MoveForPreload = new Pose(119, 102, Math.toRadians(270));
     public final Pose FirstStackPickup = new Pose(118, 88, Math.toRadians(270));
     public final Pose ShootFirstStack = new Pose(89, 84, Math.toRadians(0));
     public final Pose SecondStackPickup = new Pose(131, 64, Math.toRadians(0));
-    public final Pose ShootSecondStack = new Pose(90, 78, Math.toRadians(0));
-    public final Pose GateIntake = new Pose(134, 61, Math.toRadians(30));
+    public final Pose ShootSecondStack = new Pose(90, 78, Math.toRadians(45));
+    public final Pose GateIntake = new Pose(134.5, 60, Math.toRadians(30));
     public final Pose GateIntakeReturn1 = new Pose(90, 85, Math.toRadians(45));
+    public final Pose LeavePose = new Pose(90, 110, Math.toRadians(45));
+
 
     private PathChain chain1;
     private PathChain chain2;
@@ -59,6 +61,8 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
     private PathChain chain5;
     private PathChain chain6;
     private PathChain chain7;
+    private PathChain chain8;
+
     ElapsedTime elapsedTime = new ElapsedTime();
 
 
@@ -95,18 +99,22 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
 
         chain5 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(SecondStackPickup, ShootSecondStack))
-                .setConstantHeadingInterpolation(ShootSecondStack.getHeading())
+                .setLinearHeadingInterpolation(SecondStackPickup.getHeading(), ShootSecondStack.getHeading())
                 .build();
 
         chain6 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierCurve(ShootSecondStack, new Pose(117, 48), GateIntake))
                 .setLinearHeadingInterpolation(ShootSecondStack.getHeading(), GateIntake.getHeading())
-                .setTimeoutConstraint(500)
+                .setTimeoutConstraint(750)
                 .build();
 
         chain7 = PedroComponent.follower().pathBuilder()
                 .addPath(new BezierLine(GateIntake, GateIntakeReturn1))
                 .setLinearHeadingInterpolation(GateIntake.getHeading(), GateIntakeReturn1.getHeading())
+                .build();
+        chain8 = PedroComponent.follower().pathBuilder()
+                .addPath(new BezierLine(GateIntake, LeavePose))
+                .setLinearHeadingInterpolation(GateIntake.getHeading(), LeavePose.getHeading())
                 .build();
     }
     private Command shootingsequence(){
@@ -137,22 +145,25 @@ public class LobsterRedAutoClose extends NextFTCOpMode {
                 shootingsequence(),
                 SubIntake.INSTANCE.slowTransfer,
                 new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
-                new WaitUntil(() -> laser.threeBalls()),
+                //new WaitUntil(() -> laser.threeBalls()),
+                new Delay(2),
                 new FollowPath(chain7),
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
                 new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
-                new WaitUntil(() -> laser.threeBalls()),
+                new Delay(2),
+                //new WaitUntil(() -> laser.threeBalls()),
                 new FollowPath(chain7),
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp,
                 new Delay(0.4),
                 SubIntake.INSTANCE.slowTransfer,
                 new FollowPath(chain6).and(SubRamp.INSTANCE.RampDown),
-                new WaitUntil(() -> laser.threeBalls()),
-                new FollowPath(chain7),
+                new Delay(2),
+                //new WaitUntil(() -> laser.threeBalls()),
+                new FollowPath(chain8),
                 new Delay(0.2).and(SubIntake.INSTANCE.transferIntake),
                 SubRamp.INSTANCE.RampUp
         );

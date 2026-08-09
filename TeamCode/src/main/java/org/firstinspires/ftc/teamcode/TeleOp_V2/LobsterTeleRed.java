@@ -43,7 +43,7 @@ public class LobsterTeleRed extends NextFTCOpMode{
         );
     }
     public static Pose startingPoseRed = new Pose(9, 9, Math.toRadians(180));
-    public static Pose RedGOAL = new Pose(144, 144, Math.toRadians(180));
+    public static Pose RedGOAL = new Pose(145, 144, Math.toRadians(180));
 
 
     double robotHeading;

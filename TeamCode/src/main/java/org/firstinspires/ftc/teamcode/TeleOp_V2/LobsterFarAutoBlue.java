@@ -266,7 +266,7 @@ public class LobsterFarAutoBlue extends NextFTCOpMode {
         double shootertune = SubShoot.INSTANCE.getlutVel(distFromGoal);
         SubShoot.INSTANCE.setTargetvelocity(shootertune);
         SubShoot.INSTANCE.InterpolationTuning().schedule();
-        double despos = SubServoTurret.INSTANCE.calculate(PedroComponent.follower().getPose());
+        double despos = SubServoTurret.INSTANCE.calculateBlueFar(PedroComponent.follower().getPose());
         SubServoTurret.INSTANCE.setPos(despos);
 
 

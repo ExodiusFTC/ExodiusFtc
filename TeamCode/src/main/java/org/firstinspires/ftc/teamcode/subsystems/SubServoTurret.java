@@ -4,6 +4,8 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
+import org.opencv.core.Mat;
+
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.extensions.pedro.PedroComponent;
@@ -13,6 +15,7 @@ import dev.nextftc.hardware.positionable.SetPosition;
 public class SubServoTurret implements Subsystem {
     public static Pose BLUEGOAL = new Pose(0, 144, Math.toRadians(0));
     public static Pose REDGOAL = new Pose(144, 140, Math.toRadians(180));
+    public Pose BLUEGOALFAR = new Pose(6, 144, Math.toRadians(0));
 
     public double turret1Pos;
     public double turretsetpos;
@@ -21,7 +24,7 @@ public class SubServoTurret implements Subsystem {
     private ServoEx turret1 = new ServoEx("turret");
     private ServoEx turret2 = new ServoEx("turret2");
     public Command testing = new SetPosition(turret1, 0.865).requires(this); //+180
-    public Command testing2 = new SetPosition(turret1, 0.14).requires(this);  //-180
+    public Command testing2 = new SetPosition(turret1, 0.10).requires(this);  //-180
     public Command middle = new SetPosition(turret1, 0.502).requires(this); //0
     InterpLUT turretLut = new InterpLUT();
 
@@ -36,6 +39,20 @@ public class SubServoTurret implements Subsystem {
         double TurretPosY = PedroComponent.follower().getPose().getY() + Offset_y;
         double dx = BLUEGOAL.getX() - TurretPosX;
         double dy = BLUEGOAL.getY() - TurretPosY;
+        double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
+        double robotHeading = Math.toDegrees(botPose.getHeading());
+        double turretTargetAngle = fieldAngleToGoal - robotHeading;
+        double CorrectTurning = normalizeAngle(turretTargetAngle);
+        //double despos = 0.00201389*CorrectTurning+0.502333;
+        return CorrectTurning;
+    }
+    public double calculateBlueFar(Pose botPose){
+        double Offset_x = -2.40625 * Math.cos(botPose.getHeading());
+        double Offset_y = -2.40625 * Math.sin(botPose.getHeading());
+        double TurretPosX = PedroComponent.follower().getPose().getX() + Offset_x;
+        double TurretPosY = PedroComponent.follower().getPose().getY() + Offset_y;
+        double dx = BLUEGOALFAR.getX() - TurretPosX;
+        double dy = BLUEGOALFAR.getY() - TurretPosY;
         double fieldAngleToGoal = Math.toDegrees(Math.atan2(dy, dx));
         double robotHeading = Math.toDegrees(botPose.getHeading());
         double turretTargetAngle = fieldAngleToGoal - robotHeading;
