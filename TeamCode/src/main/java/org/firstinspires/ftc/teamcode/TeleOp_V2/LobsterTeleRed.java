@@ -137,9 +137,6 @@ public class LobsterTeleRed extends NextFTCOpMode{
         }
 
 
-
-
-
         if (gamepad2.x){
             SubShoot.INSTANCE.setPIDTRUE(true);
             SubShoot.INSTANCE.InterpolationTuning().schedule();

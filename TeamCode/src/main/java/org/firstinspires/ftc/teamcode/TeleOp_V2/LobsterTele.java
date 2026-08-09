@@ -51,6 +51,8 @@ public class LobsterTele extends NextFTCOpMode{
     public double hoodtune = 0.5;
     public double ramptune = 0.5;
     public boolean detected;
+    double servoturrettune;
+
     public double turrettune = 0.502;
     private boolean wasThreeBalls = false;
 
@@ -105,6 +107,7 @@ public class LobsterTele extends NextFTCOpMode{
 
     @Override
     public void onUpdate(){
+
         laser.update();
         boolean threeballs = laser.threeBalls();
         if (threeballs && !wasThreeBalls) {
@@ -123,6 +126,12 @@ public class LobsterTele extends NextFTCOpMode{
         if (gamepad1.dpadUpWasPressed()){
             PedroComponent.follower().setPose(startingPose);
         }
+        if (gamepad2.dpadUpWasPressed()){
+            servoturrettune +=0.01;
+        }
+        if (gamepad2.dpadDownWasPressed()){
+            servoturrettune -=0.01;
+        }
         hoodtune = SubHood.INSTANCE.getHoodlut(distFromGoal);
         SubHood.INSTANCE.sethoodtune(hoodtune);
         SubHood.INSTANCE.HoodInterpolation().schedule();
@@ -132,10 +141,6 @@ public class LobsterTele extends NextFTCOpMode{
         if(gamepad2.a){
             SubServoTurret.INSTANCE.setPos(despos);
         }
-
-
-
-
 
         if (gamepad2.x){
             SubShoot.INSTANCE.setPIDTRUE(true);
@@ -148,11 +153,13 @@ public class LobsterTele extends NextFTCOpMode{
         telemetry.addData("botpos", PedroComponent.follower().getPose().toString());
         telemetry.addData("turret1:", SubServoTurret.INSTANCE.getPos1());
         telemetry.addData("turret2:", SubServoTurret.INSTANCE.getPos2());
-        telemetry.addData("Laser Beam State", laser.getDetection());
-        telemetry.addData("Three Balls", threeballs);
-        telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
-        telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
-        telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());
+//        telemetry.addData("Laser Beam State", laser.getDetection());
+//        telemetry.addData("Three Balls", threeballs);
+//        telemetry.addData("flywheelvel", SubShoot.INSTANCE.getvel());
+//        telemetry.addData("Hood Pos", SubHood.INSTANCE.getHoodtune());
+//        telemetry.addData("target velocity", SubShoot.INSTANCE.getTargetvelocity());
+        telemetry.addData("Correct turning", despos);
+        telemetry.addData("Servo turret tune", servoturrettune);
         telemetry.update();
     }
 

@@ -92,9 +92,11 @@ public class SubServoTurret implements Subsystem {
     }
     public void initlut(){
         turretLut = new InterpLUT();   // reset: INSTANCE is a persistent singleton, so re-init must
-        turretLut.add(-180, 0.14);
-        turretLut.add(0, 0.502);
-        turretLut.add(180, 0.875);
+        turretLut.add(-180, 0.15);
+        turretLut.add(-87, 0.34);
+        turretLut.add(0, 0.51);
+        turretLut.add(87, 0.69);
+        turretLut.add(174, 0.86);
         turretLut.createLUT();
     }
 
