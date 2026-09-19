@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
 
 import com.pedropathing.ivy.Scheduler;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.Robot;
 import dev.nextftc.robot.Telemetry;
 import dev.nextftc.robot.opmode.NextOpMode;
@@ -34,10 +36,10 @@ public class BioTele extends NextOpMode {
 
 
 
-    @Override
-    public void disabledPeriodic(){
-
-    }
+//    @Override
+//    public void disabledPeriodic(){
+//
+//    }
     @Override
     public void periodic(){
         Telemetry.log("Status", "Running");
