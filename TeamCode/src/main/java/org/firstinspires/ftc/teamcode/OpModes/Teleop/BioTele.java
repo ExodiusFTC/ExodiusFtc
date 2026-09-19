@@ -1,30 +1,31 @@
 package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.pedropathing.ivy.Scheduler;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.mechanisms.Intake;
-
 import dev.nextftc.robot.Telemetry;
-import dev.nextftc.robot.opmode.BulkReadHook;
 import dev.nextftc.robot.opmode.NextOpMode;
 import dev.nextftc.robot.opmode.NextTeleop;
 import dev.nextftc.robot.triggers.CommandGamepad;
+import dev.nextftc.robot.triggers.Trigger;
 
-@NextTeleop(name = "BioTele", group = "Teleop")
+@NextTeleop(name = "BioTele")
 public class BioTele extends NextOpMode {
     private final Robot robot;
     public BioTele(Robot robot){
-        super(robot, BulkReadHook.INSTANCE);
+        super(robot);
         this.robot = robot;
-        CommandGamepad driver = new CommandGamepad(gamepad1);
-        driver.a().onTrue(robot.intake.run());
-        driver.b().onTrue(robot.intake.stop());
-
+        Scheduler.reset();
     }
     @Override
     public void start() {
+        Trigger.Companion.getDefaultEventLoop().clear();
+
+        CommandGamepad gp1 = new CommandGamepad(gamepad1);
+        CommandGamepad gp2 = new CommandGamepad(gamepad2);
+        gp1.a().onTrue(robot.getIntake().run());
+        gp1.b().onTrue(robot.getIntake().stop());
+
         // Press 'A' to run the intake at full power
 
         // Press 'B' to stop the intake
@@ -39,15 +40,10 @@ public class BioTele extends NextOpMode {
     }
     @Override
     public void periodic(){
-        if (gamepad1.aWasPressed()){
-            robot.intake.run();
-        }
-        if (gamepad2.bWasPressed()){
-            robot.intake.stop();
-        }
-        CommandGamepad driver = new CommandGamepad(gamepad1);
-        driver.a().onTrue(robot.intake.run());
-        driver.b().onTrue(robot.intake.stop());
         Telemetry.log("Status", "Running");
+    }
+    @Override
+    public void end(){
+
     }
 }
