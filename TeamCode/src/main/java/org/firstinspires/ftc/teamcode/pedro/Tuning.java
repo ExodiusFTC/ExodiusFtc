@@ -4,6 +4,7 @@ import com.pedropathing.tuning.autotune.Procedure;
 import com.pedropathing.tuning.autotune.Tuner;
 
 import org.firstinspires.ftc.teamcode.pedro.procedures.MecanumTuner;
+import org.firstinspires.ftc.teamcode.pedro.procedures.OctoQuadTuner;
 import org.firstinspires.ftc.teamcode.pedro.procedures.PinpointTuner;
 
 public class Tuning {
@@ -13,7 +14,7 @@ public class Tuning {
         return new MecanumTuner();
     }
     @Tuner
-    public static Procedure pinpointTuner() {
-        return new PinpointTuner();
+    public static Procedure octoquadTuner() {
+        return new OctoQuadTuner();
     }
 }

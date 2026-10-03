@@ -29,9 +29,10 @@ public class Robot implements NextRobot {
     public Command runIntake(){
         return intake.run();
     }
+
     @Override
     public Set<Mechanism> getMechanisms() {
-        return Set.of(intake);
+        return Set.of(intake, shooter);
     }
 
 

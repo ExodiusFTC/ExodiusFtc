@@ -24,6 +24,7 @@ public class Shooter implements Mechanism {
     public NextMotor getShooterMotor(){
         return shooterMotor;
     }
+
     @Override
     public void periodic(){
     }
