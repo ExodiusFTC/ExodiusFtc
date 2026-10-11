@@ -17,6 +17,7 @@ public class BioTele extends NextOpMode {
     public BioTele(Robot robot){
         super(robot);
         this.robot = robot;
+        //this.robot.initHardware(hardwareMap);
         Scheduler.reset();
     }
     @Override
@@ -25,8 +26,15 @@ public class BioTele extends NextOpMode {
 
         CommandGamepad gp1 = new CommandGamepad(gamepad1);
         CommandGamepad gp2 = new CommandGamepad(gamepad2);
-        gp1.a().onTrue(robot.getIntake().run());
-        gp1.b().onTrue(robot.getIntake().stop());
+        robot.startDrive(gamepad1);
+        gp1.rightBumper().onTrue(robot.getIntake().run());
+        gp1.rightBumper().onFalse(robot.getIntake().stop());
+
+        //gp1.rightTrigger().isOver(0.2).onTrue(robot.getIntake().run());
+        //gp1.rightTrigger().isOver(0.2).onFalse(robot.getIntake().stop());
+        gp1.x().onTrue(robot.intakeUp());
+        gp1.y().onTrue(robot.intakeDown());
+
 
         // Press 'A' to run the intake at full power
 
@@ -43,6 +51,9 @@ public class BioTele extends NextOpMode {
     @Override
     public void periodic(){
         Telemetry.log("Status", "Running");
+        Telemetry.log("Status", "Running");
+//        Telemetry.log("Encoder Ticks", robot.getEncoder().getCurrentTicks());
+//        Telemetry.log("Encoder Velocity", robot.getEncoder().getTickVelocity());
     }
     @Override
     public void end(){
