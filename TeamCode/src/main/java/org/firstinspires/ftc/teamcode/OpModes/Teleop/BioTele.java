@@ -36,9 +36,7 @@ public class BioTele extends NextOpMode {
         gp1.y().onTrue(robot.intakeDown());
 
 
-        // Press 'A' to run the intake at full power
 
-        // Press 'B' to stop the intake
 
     }
 

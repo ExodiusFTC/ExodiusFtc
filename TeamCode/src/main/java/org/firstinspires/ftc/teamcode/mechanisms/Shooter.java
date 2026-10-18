@@ -14,15 +14,21 @@ public class Shooter implements Mechanism {
 
 
     public Shooter(){
-        shooterMotor.getVelocityConstants().setKP(kP);
-        shooterMotor.getVelocityConstants().setKS(kS);
-        shooterMotor.getVelocityConstants().setKV(kV);
+//        shooterMotor.getVelocityConstants().setKP(kP);
+//        shooterMotor.getVelocityConstants().setKS(kS);
+//        shooterMotor.getVelocityConstants().setKV(kV);
     }
     public void setTargetVelocity(double targetVel){
         shooterMotor.setVelocitySetpoint(RotationsPerMinute.of(targetVel));
     }
+    public void setTargetVelocity2(double targetVel2){
+        counterMotor.setVelocitySetpoint(RotationsPerMinute.of(targetVel2));
+    }
     public NextMotor getShooterMotor(){
         return shooterMotor;
+    }
+    public NextMotor getCounterMotor(){
+        return counterMotor;
     }
 
     @Override
