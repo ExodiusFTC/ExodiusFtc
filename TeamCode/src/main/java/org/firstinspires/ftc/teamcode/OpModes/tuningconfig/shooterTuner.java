@@ -17,14 +17,14 @@ import dev.nextftc.robot.triggers.Trigger;
 @NextTeleop(name = "Shooter Tuner")
 public class shooterTuner extends NextOpMode {
     public static double targetVel = 0;
-    public static double kP = 0.001;
-    public static double kS = 0.09;
-    public static double kV = 0.0000445;
+    public static double kP = 0.0000009;
+    public static double kS = 0.07;
+    public static double kV = 0.00033;
 
     public static double targetVel2 = 0;
-    public static double kP2 = 0.0001;
+    public static double kP2 = 0.0000006;
     public static double kS2 = 0.05;
-    public static double kV2 = 0.000024;
+    public static double kV2 = 0.00036;
     private final Robot robot;
 
     public shooterTuner(Robot robot) {
@@ -54,13 +54,13 @@ public class shooterTuner extends NextOpMode {
 
 
         Telemetry.log("target vel", targetVel);
-        Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity().into(RotationsPerMinute));
+        Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("kP", kP);
         Telemetry.log("kS", kS);
         Telemetry.log("kV", kV);
         Telemetry.log("------------");
         Telemetry.log("target vel 2", targetVel2);
-        Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity().into(RotationsPerMinute));
+        Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
         Telemetry.log("kP 2", kP2);
         Telemetry.log("kS 2", kS2);
         Telemetry.log("kV 2", kV2);

@@ -13,7 +13,7 @@ public class Intake implements Mechanism {
 
     }
     public Command run() {
-        return instant(() -> intakeMotor.setThrottle(-1)).requiring(intakeMotor);
+        return instant(() -> intakeMotor.setThrottle(-0.6)).requiring(intakeMotor);
     }
     public Command stop(){
         return instant(() -> intakeMotor.setThrottle(0.0)).requiring(intakeMotor);
