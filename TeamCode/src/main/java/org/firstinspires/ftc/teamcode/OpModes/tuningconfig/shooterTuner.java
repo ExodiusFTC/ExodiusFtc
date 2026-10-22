@@ -18,13 +18,13 @@ import dev.nextftc.robot.triggers.Trigger;
 public class shooterTuner extends NextOpMode {
     public static double targetVel = 0;
     public static double kP = 0.0000009;
-    public static double kS = 0.07;
+    public static double kS = 0.09;
     public static double kV = 0.00033;
 
     public static double targetVel2 = 0;
-    public static double kP2 = 0.0000006;
-    public static double kS2 = 0.05;
-    public static double kV2 = 0.00036;
+    public static double kP2 = 0.0000009;
+    public static double kS2 = 0.09;
+    public static double kV2 = 0.00033;
     private final Robot robot;
 
     public shooterTuner(Robot robot) {
