@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.tuningconfig;
 
 import static dev.nextftc.units.Units.RotationsPerMinute;
+import static dev.nextftc.units.Units.getRadiansPerSecond;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,8 +18,8 @@ import dev.nextftc.robot.triggers.Trigger;
 @NextTeleop(name = "Shooter Tuner")
 public class shooterTuner extends NextOpMode {
     public static double targetVel = 0;
-    public static double kP = 0.0000009;
-    public static double kS = 0.09;
+    public static double kP = 0.003;
+    public static double kS = 0.1;
     public static double kV = 0.00033;
 
     public static double targetVel2 = 0;
@@ -51,8 +52,6 @@ public class shooterTuner extends NextOpMode {
         robot.getShooter().getCounterMotor().getVelocityConstants().setKV(kV2);
         robot.getShooter().getCounterMotor().getVelocityConstants().setKS(kS2);
         robot.getShooter().setTargetVelocity2(targetVel2);
-
-
         Telemetry.log("target vel", targetVel);
         Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("kP", kP);
