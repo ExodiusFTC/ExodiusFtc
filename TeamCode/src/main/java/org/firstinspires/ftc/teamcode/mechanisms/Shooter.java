@@ -10,13 +10,12 @@ public class Shooter implements Mechanism {
     NextMotor shooterMotor = new NextMotor("SH");
     NextMotor counterMotor = new NextMotor("SH2");
 
-    public static double kP = 0.003;
-    public static double kS = 0.1;
-    public static double kV = 0.00033;
-
-    public static double kP2 = 0.003;
-    public static double kS2 = 0.;
-    public static double kV2 = 0.00033;
+    public static double kP = 0.001;
+    public static double kS = 0.08;
+    public static double kV = 0.00035;
+    public static double kP2 = 0.004;
+    public static double kS2 = 0.06;
+    public static double kV2 = 0.000333;
 
 
     public Shooter(){

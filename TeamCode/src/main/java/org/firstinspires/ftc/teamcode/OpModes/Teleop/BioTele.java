@@ -40,6 +40,13 @@ public class BioTele extends NextOpMode {
 
         gp1.x().onTrue(robot.intakeUp());
         gp1.y().onTrue(robot.intakeDown());
+        gp2.rightBumper().onTrue(robot.getTurretServos().run());
+        gp2.rightBumper().onFalse(robot.getTurretServos().stop());
+        gp2.leftBumper().onTrue(robot.getTurretServos().runOpposite());
+        gp2.leftBumper().onFalse(robot.getTurretServos().stop());
+
+
+
 
 
 
@@ -54,16 +61,23 @@ public class BioTele extends NextOpMode {
 //    }
     @Override
     public void periodic(){
+        double turretAngle = robot.getIntake().getCurrentAngle();
+        double turretVel = robot.getIntake().getCurrentVel();
         Telemetry.log("Status", "Running");
         Telemetry.log("Status", "Running");
         robot.getShooter().setTargetVelocity(targetVel);
         robot.getShooter().setTargetVelocity2(targetVel2);
         Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
+        Telemetry.log("turretAngle", turretAngle);
+        Telemetry.log("turretVel", turretVel);
 
+//        Telemetry.log("current angle", robot.getTurret().getCurrentAngle());
+//        Telemetry.log("current vel", robot.getTurret().getCurrentVel());
 //        Telemetry.log("Encoder Ticks", robot.getEncoder().getCurrentTicks());
 //        Telemetry.log("Encoder Velocity", robot.getEncoder().getTickVelocity());
     }
+
     @Override
     public void end(){
 

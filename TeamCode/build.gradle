@@ -30,4 +30,6 @@ dependencies {
     implementation 'dev.nextftc.v2:control:0.3.0'
     implementation 'dev.nextftc.v2:hardware:0.3.0'
     implementation 'dev.nextftc.v2:robot:0.3.0'
+    implementation 'dev.nextftc.v2:pedro:0.3.1-Pedro-SNAPSHOT'
+
 }
