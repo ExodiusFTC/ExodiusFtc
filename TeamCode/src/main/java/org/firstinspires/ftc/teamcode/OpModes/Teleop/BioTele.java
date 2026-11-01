@@ -24,9 +24,11 @@ public class BioTele extends NextOpMode {
     public BioTele(Robot robot){
         super(robot);
         this.robot = robot;
+        telemetry.setMsTransmissionInterval(500);
         //this.robot.initHardware(hardwareMap);
         Telemetry.addBackend(FtcDashboard.getInstance().getTelemetry());
         Scheduler.reset();
+
     }
     @Override
     public void start() {
@@ -51,6 +53,7 @@ public class BioTele extends NextOpMode {
 
 
 
+
     }
 
 
@@ -61,6 +64,9 @@ public class BioTele extends NextOpMode {
 //    }
     @Override
     public void periodic(){
+        if(gamepad2.xWasPressed()){
+            robot.getIntake().resetEncoder();
+        }
         double turretAngle = robot.getIntake().getCurrentAngle();
         double turretVel = robot.getIntake().getCurrentVel();
         Telemetry.log("Status", "Running");
@@ -71,6 +77,7 @@ public class BioTele extends NextOpMode {
         Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
         Telemetry.log("turretAngle", turretAngle);
         Telemetry.log("turretVel", turretVel);
+        Telemetry.log("Actual angle", robot.getIntake().getActualAngle());
 
 //        Telemetry.log("current angle", robot.getTurret().getCurrentAngle());
 //        Telemetry.log("current vel", robot.getTurret().getCurrentVel());

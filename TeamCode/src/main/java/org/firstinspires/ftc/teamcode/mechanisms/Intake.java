@@ -7,14 +7,18 @@ import dev.nextftc.hardware.RobotController;
 import dev.nextftc.hardware.actuators.NextMotor;
 import dev.nextftc.robot.Mechanism;
 import dev.nextftc.units.Units;
+import dev.nextftc.units.measuretypes.Angle;
 
 public class Intake implements Mechanism {
     private double currentAngle;
     private double currentVel;
+    public double offset;
     NextMotor intakeMotor = new NextMotor("intakeMotor");
     NextMotor intakeMotor2 = new NextMotor("intakeMotor2");
-    public Intake(){
+    private static final double DEG_PER_COUNT = 360.0 / 4000.0;
 
+    public Intake(){
+        intakeMotor.setAnglePerCount(new Angle(DEG_PER_COUNT, Units.Degrees));
     }
     public Command run() {
         return instant(() -> intakeMotor.setThrottle(-0.6)).requiring(intakeMotor);
@@ -26,6 +30,12 @@ public class Intake implements Mechanism {
     public double getCurrentAngle() {
         return currentAngle;
     }
+    public double getActualAngle(){
+        return currentAngle-offset;
+    }
+    public void resetEncoder(){
+        offset = currentAngle;
+    }
 
     public double getCurrentVel() {
         return currentVel;
@@ -33,7 +43,7 @@ public class Intake implements Mechanism {
     @Override
     public void periodic() {
         intakeMotor2.setThrottle(intakeMotor.getThrottle());
-        currentAngle = intakeMotor.getEncoderPosition().getMagnitude();
+        currentAngle = intakeMotor.getEncoderPosition().into(Units.Degrees);
         currentVel = intakeMotor.getEncoderVelocity().getMagnitude();
 
     }
