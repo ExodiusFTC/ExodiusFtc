@@ -10,16 +10,18 @@ import org.firstinspires.ftc.teamcode.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.mechanisms.Shooter;
 import org.firstinspires.ftc.teamcode.mechanisms.TriangleIntake;
 import org.firstinspires.ftc.teamcode.mechanisms.TurretServos;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import java.util.Set;
 
 import dev.nextftc.robot.Mechanism;
 import dev.nextftc.robot.NextRobot;
 import dev.nextftc.robot.drive.DriveCommands;
+import dev.nextftc.v2.pedro.PedroMechanism;
 
 public class Robot implements NextRobot {
 
-//    PedroMechanism pedro = new PedroMechanism(Constants::create);
+    private final PedroMechanism pedro = new PedroMechanism(Constants::create);
 
     private final TurretServos turretServos = new TurretServos();
     private final TriangleIntake triangleIntake = new TriangleIntake();
@@ -52,6 +54,9 @@ public class Robot implements NextRobot {
     public TriangleIntake getTriangleIntake(){
         return triangleIntake;
     }
+    public PedroMechanism getPedro(){
+        return pedro;
+    }
 
 
     public Command runIntake(){
@@ -63,6 +68,7 @@ public class Robot implements NextRobot {
     public Command intakeDown(){
         return triangleIntake.down();
     }
+
 
     public void startDrive(Gamepad gamepad1) {
         DriveCommands.mecanumDrive(
@@ -77,7 +83,7 @@ public class Robot implements NextRobot {
 
     @Override
     public Set<Mechanism> getMechanisms() {
-        return Set.of(intake, shooter, drivetrain, triangleIntake, turretServos);
+        return Set.of(intake, shooter, drivetrain, triangleIntake, turretServos, pedro);
     }
 
 

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.ivy.Scheduler;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -17,6 +18,8 @@ import dev.nextftc.robot.triggers.Trigger;
 @Config
 @NextTeleop(name = "BioTele")
 public class BioTele extends NextOpMode {
+    public static Pose botPose;
+    public static Pose startingPose = new Pose(0, 0, Math.toRadians(0));
     public static double targetVel = 0;
 
     public static double targetVel2 = 0;
@@ -24,7 +27,7 @@ public class BioTele extends NextOpMode {
     public BioTele(Robot robot){
         super(robot);
         this.robot = robot;
-        telemetry.setMsTransmissionInterval(500);
+        telemetry.setMsTransmissionInterval(10);
         //this.robot.initHardware(hardwareMap);
         Telemetry.addBackend(FtcDashboard.getInstance().getTelemetry());
         Scheduler.reset();
@@ -64,6 +67,8 @@ public class BioTele extends NextOpMode {
 //    }
     @Override
     public void periodic(){
+        botPose = robot.getPedro().follower().pose();
+        robot.getTurretServos().setBotPose(botPose);
         if(gamepad2.xWasPressed()){
             robot.getIntake().resetEncoder();
         }
@@ -78,6 +83,7 @@ public class BioTele extends NextOpMode {
         Telemetry.log("turretAngle", turretAngle);
         Telemetry.log("turretVel", turretVel);
         Telemetry.log("Actual angle", robot.getIntake().getActualAngle());
+        Telemetry.log("Bot Pose", botPose.toString());
 
 //        Telemetry.log("current angle", robot.getTurret().getCurrentAngle());
 //        Telemetry.log("current vel", robot.getTurret().getCurrentVel());
