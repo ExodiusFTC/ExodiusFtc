@@ -8,10 +8,12 @@ import org.firstinspires.ftc.teamcode.OpModes.tuningconfig.TargetDerivatives;
 import dev.nextftc.control.feedback.PIDController;
 import dev.nextftc.control.feedforward.SimpleFeedforward;
 import dev.nextftc.hardware.actuators.NextCRServo;
+import dev.nextftc.hardware.sensors.NextDigitalSensor;
 import dev.nextftc.robot.Mechanism;
 import dev.nextftc.units.Units;
 
 public class TurretServos implements Mechanism {
+
     public static Pose botPose;
     public double Pos1;
     public double targPos;
@@ -58,5 +60,6 @@ public class TurretServos implements Mechanism {
         turretServo2.setPower(turretServo1.getPower());
         double feedback = turretPID.calculate(targPos -currentPos);
         double feedforward = turretFeedforward.calculate(targVel, targAccel);
+
     }
 }

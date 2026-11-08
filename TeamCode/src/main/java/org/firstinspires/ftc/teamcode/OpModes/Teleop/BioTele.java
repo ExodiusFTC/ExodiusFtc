@@ -35,11 +35,13 @@ public class BioTele extends NextOpMode {
     }
     @Override
     public void start() {
+
         Trigger.Companion.getDefaultEventLoop().clear();
 
         CommandGamepad gp1 = new CommandGamepad(gamepad1);
         CommandGamepad gp2 = new CommandGamepad(gamepad2);
-        robot.startDrive(gamepad1);
+
+
         gp1.rightBumper().onTrue(robot.getIntake().run());
         gp1.rightBumper().onFalse(robot.getIntake().stop());
 
@@ -67,6 +69,7 @@ public class BioTele extends NextOpMode {
 //    }
     @Override
     public void periodic(){
+        robot.getPedro().follower().manual(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
         botPose = robot.getPedro().follower().pose();
         robot.getTurretServos().setBotPose(botPose);
         if(gamepad2.xWasPressed()){
@@ -84,6 +87,7 @@ public class BioTele extends NextOpMode {
         Telemetry.log("turretVel", turretVel);
         Telemetry.log("Actual angle", robot.getIntake().getActualAngle());
         Telemetry.log("Bot Pose", botPose.toString());
+        Telemetry.log("heading", Math.toDegrees(botPose.heading()));
 
 //        Telemetry.log("current angle", robot.getTurret().getCurrentAngle());
 //        Telemetry.log("current vel", robot.getTurret().getCurrentVel());
