@@ -48,10 +48,10 @@ public class shooterTuner extends NextOpMode {
         robot.getShooter().getShooterMotor().getVelocityConstants().setKS(kS);
         robot.getShooter().setTargetVelocity(targetVel);
 
-        robot.getShooter().getCounterMotor().getVelocityConstants().setKP(kP2);
-        robot.getShooter().getCounterMotor().getVelocityConstants().setKV(kV2);
-        robot.getShooter().getCounterMotor().getVelocityConstants().setKS(kS2);
-        robot.getShooter().setTargetVelocity2(targetVel2);
+//        robot.getShooter().getCounterMotor().getVelocityConstants().setKP(kP2);
+//        robot.getShooter().getCounterMotor().getVelocityConstants().setKV(kV2);
+//        robot.getShooter().getCounterMotor().getVelocityConstants().setKS(kS2);
+//        robot.getShooter().setTargetVelocity2(targetVel2);
         Telemetry.log("target vel", targetVel);
         Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("kP", kP);
