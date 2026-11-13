@@ -1,31 +1,27 @@
 package org.firstinspires.ftc.teamcode.OpModes.tuningconfig;
 
-import static dev.nextftc.units.Units.RotationsPerMinute;
-import static dev.nextftc.units.Units.getRadiansPerSecond;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.ivy.Scheduler;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.mechanisms.Shooter;
 
 import dev.nextftc.robot.Telemetry;
 import dev.nextftc.robot.opmode.NextOpMode;
 import dev.nextftc.robot.opmode.NextTeleop;
 import dev.nextftc.robot.triggers.Trigger;
 
+/**
+ * Set targetVel (shooter wheel) and targetVel2 (counter wheel) in FTC Dashboard.
+ * Gains (kS/kV/kP and kS2/kV2/kP2), switchFraction, reengageFraction, bangPower and
+ * counterSign are edited on the Shooter config, so what you tune here is what the robot uses.
+ */
 @Config
 @NextTeleop(name = "Shooter Tuner")
 public class shooterTuner extends NextOpMode {
     public static double targetVel = 0;
-    public static double kP = 0.002;
-    public static double kS = 0.1;
-    public static double kV = 0.00029;
-
     public static double targetVel2 = 0;
-    public static double kP2 = 0.004;
-    public static double kS2 = 0.06;
-    public static double kV2 = 0.000333;
     private final Robot robot;
 
     public shooterTuner(Robot robot) {
@@ -42,27 +38,21 @@ public class shooterTuner extends NextOpMode {
 
     @Override
     public void periodic() {
+        Shooter shooter = robot.getShooter();
+        shooter.setTargetVelocity(targetVel);
+        shooter.setTargetVelocity2(targetVel2);
 
-        robot.getShooter().getShooterMotor().getVelocityConstants().setKP(kP);
-        robot.getShooter().getShooterMotor().getVelocityConstants().setKV(kV);
-        robot.getShooter().getShooterMotor().getVelocityConstants().setKS(kS);
-        robot.getShooter().setTargetVelocity(targetVel);
-
-//        robot.getShooter().getCounterMotor().getVelocityConstants().setKP(kP2);
-//        robot.getShooter().getCounterMotor().getVelocityConstants().setKV(kV2);
-//        robot.getShooter().getCounterMotor().getVelocityConstants().setKS(kS2);
-//        robot.getShooter().setTargetVelocity2(targetVel2);
         Telemetry.log("target vel", targetVel);
-        Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
-        Telemetry.log("kP", kP);
-        Telemetry.log("kS", kS);
-        Telemetry.log("kV", kV);
-        Telemetry.log("------------");
+        Telemetry.log("measured vel", shooter.getMeasuredVelocity());
+        Telemetry.log("error", targetVel - shooter.getMeasuredVelocity());
+        Telemetry.log("mode", shooter.getMode().toString());
+        Telemetry.log("shooter power", shooter.getPower());
+
         Telemetry.log("target vel 2", targetVel2);
-        Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
-        Telemetry.log("kP 2", kP2);
-        Telemetry.log("kS 2", kS2);
-        Telemetry.log("kV 2", kV2);
+        Telemetry.log("counter measured vel", shooter.getMeasuredVelocity2());
+        Telemetry.log("error 2", targetVel2 - shooter.getMeasuredVelocity2());
+        Telemetry.log("mode 2", shooter.getMode2().toString());
+        Telemetry.log("counter power", shooter.getPower2());
         // No update() needed: NextFTC calls it automatically after periodic()
     }
 }

@@ -80,7 +80,7 @@ public class BioTele extends NextOpMode {
         Telemetry.log("Status", "Running");
         Telemetry.log("Status", "Running");
         robot.getShooter().setTargetVelocity(targetVel);
-        //robot.getShooter().setTargetVelocity2(targetVel2);
+        robot.getShooter().setTargetVelocity2(targetVel2);
         Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
         Telemetry.log("turretAngle", turretAngle);
