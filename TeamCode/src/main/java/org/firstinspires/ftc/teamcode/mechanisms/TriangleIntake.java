@@ -23,4 +23,6 @@ public class TriangleIntake implements Mechanism {
         triangleServoL.setPosition(1 - triangleServoR.getPosition());
 
     }
+
+
 }
