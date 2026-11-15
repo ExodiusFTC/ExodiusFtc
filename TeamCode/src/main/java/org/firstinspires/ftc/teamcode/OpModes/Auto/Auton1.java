@@ -39,7 +39,7 @@ public class Auton1 extends NextOpMode {
                 waitMs(3000),
                 robot.getIntake().run(),
                 waitMs(1000),
-                follow(follower, paths.path1())
+                follow(follower, paths.firstCycle())
                 // Add mechanism commands here.
         );
     }
