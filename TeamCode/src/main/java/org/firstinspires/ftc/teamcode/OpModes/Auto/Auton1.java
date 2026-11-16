@@ -43,19 +43,21 @@ public class Auton1 extends NextOpMode {
                 // Add mechanism commands here.
         );
     }
-
+    @Override
+    public void disabledPeriodic(){
+        robot.intakeUp().schedule();
+    }
     @Override
     public void start() {
-        // Get the follower from the Pedro mechanism that Robot already created.
-        // This must happen here (not in the constructor / a field initializer):
-        // the hardware map isn't available yet when the OpMode is constructed.
+        robot.getShooter().setTargetVelocity(targetVel);
+        robot.getShooter().setTargetVelocity2(targetVel2);
+
         Follower follower = robot.getPedro().follower();
 
-        // Tell Pedro where the robot actually starts, so the path begins from there.
         follower.setPose(paths.startPose());
 
         autoRoutine(follower).schedule();
-        robot.intakeUp().schedule(); // schedule once; calling it every loop did nothing
+
     }
 
     @Override

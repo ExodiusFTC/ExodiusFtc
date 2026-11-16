@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.ivy.Command;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.mechanisms.Blocker;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.mechanisms.Shooter;
@@ -28,20 +29,13 @@ public class Robot implements NextRobot {
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
     //private final ELCencoder encoder = new ELCencoder();
-    private final Drivetrain drivetrain = new Drivetrain();
+    private final Blocker blocker = new Blocker();
+
     //private final TurretEncoder turretEncoder = new TurretEncoder();
 
 
     public Robot() {}
-//    public void initHardware(HardwareMap hwMap) {
-//        encoder.init(hwMap);
-//    }
-//    public ELCencoder getEncoder() {
-//        return encoder;
-//    }
-//    public TurretEncoder getTurret(){
-//        return turretEncoder;
-//    }
+
     public TurretServos getTurretServos(){
         return turretServos;
     }
@@ -50,6 +44,9 @@ public class Robot implements NextRobot {
     }
     public Shooter getShooter(){
         return shooter;
+    }
+    public Blocker getBlocker(){
+        return blocker;
     }
     public TriangleIntake getTriangleIntake(){
         return triangleIntake;
@@ -70,20 +67,12 @@ public class Robot implements NextRobot {
     }
 
 
-    public void startDrive(Gamepad gamepad1) {
-        DriveCommands.mecanumDrive(
-                drivetrain.frontLeft,
-                drivetrain.frontRight,
-                drivetrain.backLeft,
-                drivetrain.backRight,
-                gamepad1
-        ).schedule();
-    }
+
 
 
     @Override
     public Set<Mechanism> getMechanisms() {
-        return Set.of(intake, shooter, drivetrain, triangleIntake, turretServos, pedro);
+        return Set.of(intake, shooter, blocker, triangleIntake, turretServos, pedro);
     }
 
 
