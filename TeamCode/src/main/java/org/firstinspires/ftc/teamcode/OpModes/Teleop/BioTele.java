@@ -31,6 +31,8 @@ public class BioTele extends NextOpMode {
         //this.robot.initHardware(hardwareMap);
         Telemetry.addBackend(FtcDashboard.getInstance().getTelemetry());
         Scheduler.reset();
+        robot.intakeUp();
+
 
     }
     @Override
@@ -51,6 +53,8 @@ public class BioTele extends NextOpMode {
         gp2.rightBumper().onFalse(robot.getTurretServos().stop());
         gp2.leftBumper().onTrue(robot.getTurretServos().runOpposite());
         gp2.leftBumper().onFalse(robot.getTurretServos().stop());
+        robot.intakeUp();
+
 
 
 
@@ -63,10 +67,10 @@ public class BioTele extends NextOpMode {
 
 
 
-//    @Override
-//    public void disabledPeriodic(){
-//
-//    }
+    @Override
+    public void disabledPeriodic(){
+        robot.intakeUp();
+    }
     @Override
     public void periodic(){
         robot.getPedro().follower().manual(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
@@ -79,8 +83,15 @@ public class BioTele extends NextOpMode {
         double turretVel = robot.getIntake().getCurrentVel();
         Telemetry.log("Status", "Running");
         Telemetry.log("Status", "Running");
-        robot.getShooter().setTargetVelocity(targetVel);
-        robot.getShooter().setTargetVelocity2(targetVel2);
+        if(gamepad1.left_trigger >= 0.2){
+            robot.getShooter().setTargetVelocity(targetVel);
+            robot.getShooter().setTargetVelocity2(targetVel2);
+        }
+        else{
+            robot.getShooter().setTargetVelocity(0);
+            robot.getShooter().setTargetVelocity2(0);
+        }
+
         Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
         Telemetry.log("turretAngle", turretAngle);

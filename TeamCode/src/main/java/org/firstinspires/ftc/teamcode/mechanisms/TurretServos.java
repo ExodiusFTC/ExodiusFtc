@@ -31,6 +31,7 @@ public class TurretServos implements Mechanism {
     NextCRServo turretServo2 = new NextCRServo("turretServo2");
     public TurretServos(){
 
+
     }
     public Command run(){
         return instant(() -> turretServo1.setPower(1)).requiring(turretServo1);

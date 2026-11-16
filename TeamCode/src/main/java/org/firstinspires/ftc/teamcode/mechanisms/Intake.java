@@ -15,7 +15,7 @@ public class Intake implements Mechanism {
     public double offset;
     NextMotor intakeMotor = new NextMotor("intakeMotor");
     NextMotor intakeMotor2 = new NextMotor("intakeMotor2");
-    private static final double DEG_PER_COUNT = 360.0 / 4000.0;
+    private static final double DEG_PER_COUNT = (0.09 * (45.0 / 160.0));
 
     public Intake(){
         intakeMotor.setAnglePerCount(new Angle(DEG_PER_COUNT, Units.Degrees));
