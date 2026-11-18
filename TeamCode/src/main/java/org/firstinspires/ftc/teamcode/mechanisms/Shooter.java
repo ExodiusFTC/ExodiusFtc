@@ -16,8 +16,11 @@ import dev.nextftc.units.Units;
  *  - If a shot drops the speed far enough below target, back to full power until it
  *    recovers, then back to feedforward.
  *
- * The counter motor is mounted reversed, so its power and velocity are multiplied by
- * counterSign (-1) to work in a "positive = spinning the right way" frame.
+ * The counter motor faces the opposite way, so its target is negative (e.g. front 580, back -600).
+ * counterSign (default +1) can flip the counter into a positive-is-correct frame if you prefer.
+ *
+ * Targets can be negative: the sign sets the spin direction (in the same frame as the
+ * measured velocity), and 0 turns the wheel off.
  *
  * Velocity unit is rad/s (same as the old setTargetVelocity). Type targets in the same
  * unit the "measured vel" telemetry shows and tune kV in that unit.
@@ -47,10 +50,11 @@ public class Shooter implements Mechanism {
     public static double reengageFraction = 0.08;
     public static double bangPower = 1.0;
 
-    // -1 because the counter motor is reversed. Applied to both the power sent to it
-    // and its measured velocity. If "counter measured vel" reads negative while the
-    // wheel spins the correct way, flip this to +1 (and check the motor direction).
-    public static double counterSign = -1.0;
+    // Sign applied to the counter motor's power and measured velocity.
+    // +1 = work in the counter motor's own direction: type a NEGATIVE target (e.g. -600) for the
+    // back wheel, and its "counter measured vel" telemetry reads negative while it spins correctly.
+    // Set to -1 to flip into a "positive = spinning the right way" frame (then type +600).
+    public static double counterSign = 1.0;
 
     /** Controller state for one flywheel. */
     private static class Wheel {
@@ -60,15 +64,21 @@ public class Shooter implements Mechanism {
         Mode mode = Mode.IDLE;
 
         void update(double kS, double kV, double kP) {
-            if (target <= 0) {
+            if (target == 0) {
                 mode = Mode.IDLE;
                 power = 0;
                 return;
             }
 
-            double error = target - measured;
-            double enter = switchFraction * target;
-            double exit = Math.max(reengageFraction, switchFraction) * target;
+            // Work in "magnitude along the commanded direction" so negative targets spin the
+            // wheel the other way instead of being treated as off.
+            double dir = Math.signum(target);
+            double tgt = Math.abs(target);
+            double meas = measured * dir;
+
+            double error = tgt - meas;
+            double enter = switchFraction * tgt;
+            double exit = Math.max(reengageFraction, switchFraction) * tgt;
 
             if (mode == Mode.FEEDFORWARD) {
                 if (error > exit) mode = Mode.BANG;
@@ -76,13 +86,15 @@ public class Shooter implements Mechanism {
                 mode = (error <= enter) ? Mode.FEEDFORWARD : Mode.BANG;
             }
 
+            double mag;
             if (mode == Mode.BANG) {
-                power = bangPower;
+                mag = bangPower;
             } else {
-                // feedforward + proportional trim, clamped (never negative: no braking)
-                power = kS + kV * target + kP * error;
-                power = Math.max(0.0, Math.min(1.0, power));
+                // feedforward + proportional trim, clamped (never reverses: no braking)
+                mag = kS + kV * tgt + kP * error;
+                mag = Math.max(0.0, Math.min(1.0, mag));
             }
+            power = dir * mag;
         }
     }
 
