@@ -65,6 +65,12 @@ public class Robot implements NextRobot {
     public Command intakeDown(){
         return triangleIntake.down();
     }
+    public Command Block(){
+        return blocker.block();
+    }
+    public Command Unblock(){
+        return blocker.unblock();
+    }
 
 
 

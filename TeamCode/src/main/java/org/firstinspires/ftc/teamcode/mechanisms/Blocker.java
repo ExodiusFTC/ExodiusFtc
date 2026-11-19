@@ -10,11 +10,11 @@ public class Blocker implements Mechanism {
     public Blocker() {
 
     }
-    public Command block(){
-        return instant(() -> blocker.setPosition(0.5)).requiring(blocker);
-    }
     public Command unblock(){
-        return instant(() -> blocker.setPosition(0)).requiring(blocker);
+        return instant(() -> blocker.setPosition(0.65)).requiring(blocker).requiring(blocker);
+    }
+    public Command block(){
+        return instant(() -> blocker.setPosition(0.78)).requiring(blocker);
     }
     @Override
     public void periodic(){

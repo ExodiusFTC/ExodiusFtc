@@ -23,7 +23,7 @@ import dev.nextftc.robot.Mechanism;
 @Config
 public class TurretServos implements Mechanism {
 
-    public static double kP = 0.01;
+    public static double kP = 0.015;
     public static double kI = 0.0;
     public static double kD = 0.0008;
     public static double kS = 0.001;

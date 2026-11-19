@@ -51,10 +51,12 @@ public class BioTele extends NextOpMode {
 
         gp1.x().onTrue(robot.intakeUp());
         gp1.y().onTrue(robot.intakeDown());
-        gp2.rightBumper().onTrue(robot.getTurretServos().run());
+        //gp2.rightBumper().onTrue(robot.getTurretServos().run());
         gp2.rightBumper().onFalse(robot.getTurretServos().stop());
         gp2.leftBumper().onTrue(robot.getTurretServos().runOpposite());
         gp2.leftBumper().onFalse(robot.getTurretServos().stop());
+        gp1.leftBumper().onTrue(robot.getBlocker().unblock().with(robot.runIntake()));
+        gp1.leftBumper().onFalse(robot.getBlocker().block().with(robot.getIntake().stop()));
         robot.intakeUp();
         robot.getIntake().resetEncoder();
 
@@ -82,10 +84,12 @@ public class BioTele extends NextOpMode {
         botPose = robot.getPedro().follower().pose();
 
 
-        if(gamepad2.xWasPressed()){
+        if(gamepad2.dpadDownWasPressed()){
             robot.getIntake().resetEncoder();
         }
-        // current turret angle first, so the aim calculation uses this loop's reading
+        if(gamepad1.dpadDownWasPressed()){
+            robot.getPedro().follower().setPose(startingPose);
+        }
         double actualAngle = robot.getIntake().getActualAngle();
         robot.getTurretServos().setCurrentPos(actualAngle);
         double angle = robot.getTurretServos().calculateAimAngle(botPose.x(), botPose.y(), botPose.heading());
@@ -103,7 +107,7 @@ public class BioTele extends NextOpMode {
             robot.getShooter().setTargetVelocity2(0);
         }
 
-        // Hold gamepad 2 A to aim the turret at the goal; release to give it back to the bumpers.
+        // Hold gamepad 1 A to aim the turret at the goal; release to give it back to the bumpers.
         if(gamepad1.a){
             robot.getTurretServos().setTargetPos(angle);
             robot.getTurretServos().setClosedLoop(true);
@@ -113,6 +117,7 @@ public class BioTele extends NextOpMode {
             robot.getTurretServos().setManualPower(0);   // closed loop off, turret stops
             wasAiming = false;
         }
+
 
         Telemetry.log("current vel", robot.getShooter().getShooterMotor().getEncoderVelocity());
         Telemetry.log("current vel 2", robot.getShooter().getCounterMotor().getEncoderVelocity());
@@ -124,10 +129,8 @@ public class BioTele extends NextOpMode {
         Telemetry.log("Bot Pose", botPose.toString());
         Telemetry.log("heading", Math.toDegrees(botPose.heading()));
 
-//        Telemetry.log("current angle", robot.getTurret().getCurrentAngle());
-//        Telemetry.log("current vel", robot.getTurret().getCurrentVel());
-//        Telemetry.log("Encoder Ticks", robot.getEncoder().getCurrentTicks());
-//        Telemetry.log("Encoder Velocity", robot.getEncoder().getTickVelocity());
+
+
     }
 
     @Override
