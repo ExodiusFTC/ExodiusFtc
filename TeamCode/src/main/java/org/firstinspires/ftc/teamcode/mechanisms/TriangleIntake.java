@@ -16,7 +16,7 @@ public class TriangleIntake implements Mechanism {
         return instant(() -> triangleServoR.setPosition(0.35)).requiring(triangleServoR);
     }
     public Command up(){
-        return instant(() -> triangleServoR.setPosition(0.6)).requiring(triangleServoR);
+        return instant(() -> triangleServoR.setPosition(0.5)).requiring(triangleServoR);
     }
 
     @Override
