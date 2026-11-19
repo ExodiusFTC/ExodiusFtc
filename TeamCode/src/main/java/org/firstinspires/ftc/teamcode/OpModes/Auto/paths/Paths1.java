@@ -12,7 +12,7 @@ public class Paths1 {
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
     private final Pose start = poseFactory.of(56, 8, 180);
-    private final Pose firstCycle = poseFactory.of(6, 8, 180);
+    private final Pose firstCycle = poseFactory.of(10, 10, 180);
     private final Pose firstShootForSecondTipStart = poseFactory.of(6, 8, 180);
     private final Pose firstShootForSecondTip = poseFactory.of(47, 130, 90);
     private final Pose firstShootForSecondTipControl1 = poseFactory.of(24, 76, 0);

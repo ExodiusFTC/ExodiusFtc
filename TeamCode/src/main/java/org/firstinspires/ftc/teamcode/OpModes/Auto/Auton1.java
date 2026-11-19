@@ -69,6 +69,8 @@ public class Auton1 extends NextOpMode {
     }
     @Override
     public void start() {
+        robot.getIntake().resetEncoder();
+
         robot.getShooter().setTargetVelocity(targetVel);
         robot.getShooter().setTargetVelocity2(targetVel2);
 
