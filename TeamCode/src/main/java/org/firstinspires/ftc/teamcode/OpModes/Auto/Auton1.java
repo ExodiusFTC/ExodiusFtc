@@ -36,7 +36,7 @@ public class Auton1 extends NextOpMode {
         this.robot = robot;
         telemetry.setMsTransmissionInterval(10);
         Telemetry.addBackend(FtcDashboard.getInstance().getTelemetry());
-        //robot.getIntake().resetEncoder();
+        robot.getIntake().resetEncoder();
         robot.getPedro().follower().setPose(startingPose);
         Scheduler.reset();
     }
@@ -46,7 +46,9 @@ public class Auton1 extends NextOpMode {
                 waitMs(3000),
                 robot.getIntake().run(),
                 waitMs(1000),
-                follow(follower, paths.firstCycle())
+                follow(follower, paths.firstCycle()),
+                follow(follower, paths.firstShootForSecondTip())
+
                 // Add mechanism commands here.
         );
     }
@@ -55,15 +57,15 @@ public class Auton1 extends NextOpMode {
         robot.getPedro().follower().setPose(startingPose);
 
         robot.intakeUp().schedule();
-        //robot.getIntake().resetEncoder();
-        if(gamepad2.xWasPressed()){
-            robot.getIntake().resetEncoder();
-        }
+        // Zero the turret encoder wherever the turret sits during init (like BioTele does),
+        // so place the turret facing straight forward before pressing start.
+        robot.getIntake().resetEncoder();
+
+        // Use the follower pose directly: the static botPose is still null until periodic() runs.
+        Pose pose = robot.getPedro().follower().pose();
+        robot.getTurretServos().setCurrentPos(robot.getIntake().getActualAngle());
         Telemetry.log("Actual angle", robot.getIntake().getActualAngle());
-        Telemetry.log("Target Angle", robot.getTurretServos().calculateAimAngle(botPose.x(), botPose.y(), botPose.heading()));
-
-
-
+        Telemetry.log("Target Angle", robot.getTurretServos().calculateAimAngle(pose.x(), pose.y(), pose.heading()));
     }
     @Override
     public void start() {
@@ -85,14 +87,22 @@ public class Auton1 extends NextOpMode {
 
         robot.getShooter().setTargetVelocity(targetVel);
         robot.getShooter().setTargetVelocity2(targetVel2);
-//        robot.getTurretServos().setTargetPos(robot.getTurretServos().calculateAimAngle(botPose.x(), botPose.y(), botPose.heading()));
-//        robot.getTurretServos().setClosedLoop(true);
-        Telemetry.log("Actual angle", robot.getIntake().getActualAngle());
-        Telemetry.log("Target Angle", robot.getTurretServos().calculateAimAngle(botPose.x(), botPose.y(), botPose.heading()));
 
+        // Turret auto-aim: feed in the current angle first so the aim calc uses this loop's reading.
+        double actualAngle = robot.getIntake().getActualAngle();
+        robot.getTurretServos().setCurrentPos(actualAngle);
+        double aimAngle = robot.getTurretServos().calculateAimAngle(botPose.x(), botPose.y(), botPose.heading());
+        robot.getTurretServos().setTargetPos(aimAngle);
+        robot.getTurretServos().setClosedLoop(true);
+
+        Telemetry.log("Actual angle", actualAngle);
+        Telemetry.log("Target Angle", aimAngle);
+        Telemetry.log("Turret error", robot.getTurretServos().getError());
+        Telemetry.log("Bot Pose", botPose.toString());
     }
 
     @Override
     public void end() {
+        robot.getTurretServos().setManualPower(0);   // closed loop off, turret stops
     }
 }
