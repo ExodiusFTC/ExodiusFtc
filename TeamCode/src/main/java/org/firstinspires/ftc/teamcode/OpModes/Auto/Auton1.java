@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
+import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
@@ -11,8 +12,10 @@ import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.paths.Paths1;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import dev.nextftc.robot.Telemetry;
 import dev.nextftc.robot.opmode.NextAutonomous;
@@ -26,8 +29,8 @@ public class Auton1 extends NextOpMode {
     public static Pose startingPose = new Pose(56, 8, Math.toRadians(180));
 
 
-    public static double targetVel = 520;
-    public static double targetVel2 = 680;
+    public static double targetVel = 580;
+    public static double targetVel2 = -580;
     public static Pose botPose;
 
 
@@ -38,28 +41,64 @@ public class Auton1 extends NextOpMode {
         Telemetry.addBackend(FtcDashboard.getInstance().getTelemetry());
         robot.getIntake().resetEncoder();
         robot.getPedro().follower().setPose(startingPose);
+        robot.getBlocker().block().schedule();
+        robot.intakeUp().schedule();
         Scheduler.reset();
     }
 
     private Command autoRoutine(Follower follower) {
         return sequential(
+                robot.getBlocker().unblock(),
                 waitMs(3000),
-                robot.getIntake().run(),
+                robot.runIntake(),
                 waitMs(1000),
+                robot.getBlocker().block(),
+                instant(() -> Constants.foresightConfig.maxPathSpeed.set(0.5)),
                 follow(follower, paths.firstCycle()),
-                follow(follower, paths.firstShootForSecondTip())
+                instant(() -> Constants.foresightConfig.maxPathSpeed.set(1.0)),
+                waitMs(500),
+                follow(follower, paths.firstShootForSecondTip()),
+                waitMs(2500),
+                robot.getBlocker().unblock(),
+                waitMs(1000),
+                robot.intakeDown(),
+                waitMs(500).with(robot.getBlocker().block()),
+                follow(follower, paths.getFlowerOne()),
+                waitMs(1000),
+                follow(follower, paths.Back1()),
+                follow(follower, paths.Forth1()),
+                waitMs(1000),
+                follow(follower, paths.Back2()),
+                robot.getBlocker().unblock(),
+                waitMs(500),
+                robot.intakeUp(),
+                robot.getBlocker().block().with(follow(follower, paths.moveToFlower2())),
+                robot.intakeDown(),
+                waitMs(500),
+                follow(follower, paths.getFlower2()),
+                waitMs(1000),
+                follow(follower, paths.shootAgain()),
+                waitMs(500),
+                robot.getBlocker().unblock(),
+                waitMs(600),
+                robot.getBlocker().block().with(robot.intakeUp()),
+                follow(follower, paths.park())
+
+
+
+
 
                 // Add mechanism commands here.
         );
     }
     @Override
     public void disabledPeriodic(){
-        robot.getPedro().follower().setPose(startingPose);
+        //robot.getPedro().follower().setPose(startingPose);
 
-        robot.intakeUp().schedule();
+       // robot.intakeUp().schedule();
         // Zero the turret encoder wherever the turret sits during init (like BioTele does),
         // so place the turret facing straight forward before pressing start.
-        robot.getIntake().resetEncoder();
+        //robot.getIntake().resetEncoder();
 
         // Use the follower pose directly: the static botPose is still null until periodic() runs.
         Pose pose = robot.getPedro().follower().pose();
@@ -69,7 +108,7 @@ public class Auton1 extends NextOpMode {
     }
     @Override
     public void start() {
-        robot.getIntake().resetEncoder();
+        //robot.getIntake().resetEncoder();
 
         robot.getShooter().setTargetVelocity(targetVel);
         robot.getShooter().setTargetVelocity2(targetVel2);

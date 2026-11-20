@@ -26,7 +26,7 @@ public class TurretServos implements Mechanism {
     public static double kP = 0.015;
     public static double kI = 0.0;
     public static double kD = 0.0008;
-    public static double kS = 0.001;
+    public static double kS = 0.0007;
     public static double kV = 0.001;
     public static double kA = 0.0;
 
@@ -43,7 +43,7 @@ public class TurretServos implements Mechanism {
     // Robot y >= splitY aims at the upper goal point, otherwise at the lower one (field inches).
     public static double splitY = 72.0;
     public static double upperGoalX = 58.0;
-    public static double upperGoalY = 85.0;
+    public static double upperGoalY = 80.0;
     public static double lowerGoalX = 58.0;
     public static double lowerGoalY = 59.0;
     // +1 if a positive turret angle turns counter-clockwise (same direction as Pedro heading).

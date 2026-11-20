@@ -19,10 +19,10 @@ import dev.nextftc.robot.triggers.Trigger;
 @NextTeleop(name = "BioTele")
 public class BioTele extends NextOpMode {
     public static Pose botPose;
-    public static Pose startingPose = new Pose(8, 136, Math.toRadians(180));
+    public static Pose startingPose = new Pose(8, 137, Math.toRadians(180));
     public static double targetVel = 580;
 
-    public static double targetVel2 = 600;
+    public static double targetVel2 = -600;
     private final Robot robot;
     private boolean wasAiming = false;
     public BioTele(Robot robot){

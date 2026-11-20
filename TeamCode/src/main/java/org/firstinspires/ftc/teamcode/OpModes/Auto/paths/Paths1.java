@@ -13,19 +13,26 @@ public class Paths1 {
 
     private final Pose start = poseFactory.of(56, 8, 180);
     private final Pose firstCycle = poseFactory.of(10, 10, 180);
-    private final Pose firstShootForSecondTipStart = poseFactory.of(6, 8, 180);
-    private final Pose firstShootForSecondTip = poseFactory.of(47, 130, 90);
+    private final Pose firstShootForSecondTipStart = poseFactory.of(10, 10, 180);
+    private final Pose firstShootForSecondTip = poseFactory.of(49, 123, 90);
     private final Pose firstShootForSecondTipControl1 = poseFactory.of(24, 76, 0);
-    private final Pose firstShootForSecondTipControl2 = poseFactory.of(33, 114, 0);
-    private final Pose getFlowerOne = poseFactory.of(47, 133.5, 90);
-    private final Pose moveToFlower2Start = poseFactory.of(47, 133.5, 90);
-    private final Pose moveToFlower2 = poseFactory.of(16.5, 46.5, 180);
+    private final Pose firstShootForSecondTipControl2 = poseFactory.of(33, 116, 0);
+    private final Pose getFlowerOne = poseFactory.of(49, 130.5, 90);
+    private final Pose back = poseFactory.of(49, 125, 90);
+    private final Pose forth = poseFactory.of(49, 130.5, 90);
+
+    private final Pose Back2 = poseFactory.of(53, 123, 90);
+
+
+
+    private final Pose moveToFlower2Start = poseFactory.of(52, 123, 180);
+    private final Pose moveToFlower2 = poseFactory.of(20, 50, 180);
     private final Pose moveToFlower2Control1 = poseFactory.of(15, 96, 0);
-    private final Pose getFlower2 = poseFactory.of(8, 46.5, 180);
-    private final Pose shootAgainStart = poseFactory.of(8, 46.5, 180);
-    private final Pose shootAgain = poseFactory.of(49.652, 127.9024, 180);
-    private final Pose parkStart = poseFactory.of(49.652, 127.9024, 180);
-    private final Pose park = poseFactory.of(4.1069, 116.9113, 180);
+    private final Pose getFlower2 = poseFactory.of(14, 50, 180);
+    private final Pose shootAgainStart = poseFactory.of(14, 50, 180);
+    private final Pose shootAgain = poseFactory.of(54, 127.9024, 180);
+    private final Pose parkStart = poseFactory.of(54, 127.9024, 180);
+    private final Pose park = poseFactory.of(11, 116.9113, 180);
 
     public Pose startPose() {
         return start;
@@ -41,6 +48,15 @@ public class Paths1 {
 
     public Path getFlowerOne() {
         return Paths.line(firstShootForSecondTip, getFlowerOne).tangent();
+    }
+    public Path Back1() {
+        return Paths.line(getFlowerOne, back).reverseTangent();
+    }
+    public Path Forth1() {
+        return Paths.line(back, forth).tangent();
+    }
+    public Path Back2() {
+        return Paths.line(forth, Back2).reverseTangent();
     }
 
     public Path moveToFlower2() {
