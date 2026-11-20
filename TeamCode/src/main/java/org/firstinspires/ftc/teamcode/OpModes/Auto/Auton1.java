@@ -26,7 +26,7 @@ import dev.nextftc.robot.opmode.NextOpMode;
 public class Auton1 extends NextOpMode {
     private final Robot robot;
     private final Paths1 paths = new Paths1();
-    public static Pose startingPose = new Pose(56, 8, Math.toRadians(180));
+    public static Pose startingPose = new Pose(55, 6.7, Math.toRadians(180));
 
 
     public static double targetVel = 580;
