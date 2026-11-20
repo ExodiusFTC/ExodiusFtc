@@ -7,28 +7,34 @@ import com.pedropathing.api.PoseFactory;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 
+import org.firstinspires.ftc.teamcode.pedro.Constants;
+
 public class Paths1 {
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose start = poseFactory.of(56, 8, 180);
-    private final Pose firstCycle = poseFactory.of(10, 10, 180);
-    private final Pose firstShootForSecondTipStart = poseFactory.of(10, 10, 180);
-    private final Pose firstShootForSecondTip = poseFactory.of(49, 123, 90);
+    private final Pose start = poseFactory.of(55, 6.7, 180);
+    private final Pose firstCycle = poseFactory.of(9, 7.5, 180);
+    private final Pose firstShootForSecondTipStart = poseFactory.of(9, 7.5, 180);
+    private final Pose firstShootForSecondTip = poseFactory.of(49, 121, 90);
     private final Pose firstShootForSecondTipControl1 = poseFactory.of(24, 76, 0);
     private final Pose firstShootForSecondTipControl2 = poseFactory.of(33, 116, 0);
-    private final Pose getFlowerOne = poseFactory.of(49, 130.5, 90);
+    private final Pose getFlowerOne = poseFactory.of(49, 129, 90);
     private final Pose back = poseFactory.of(49, 125, 90);
-    private final Pose forth = poseFactory.of(49, 130.5, 90);
+    private final Pose forth = poseFactory.of(49, 129, 90);
 
-    private final Pose Back2 = poseFactory.of(53, 123, 90);
+    private final Pose Back2 = poseFactory.of(53, 125, 90);
 
 
 
     private final Pose moveToFlower2Start = poseFactory.of(52, 123, 180);
     private final Pose moveToFlower2 = poseFactory.of(20, 50, 180);
     private final Pose moveToFlower2Control1 = poseFactory.of(15, 96, 0);
-    private final Pose getFlower2 = poseFactory.of(14, 50, 180);
+    private final Pose getFlower2 = poseFactory.of(13.5, 50, 180);
+    private final Pose BackfromFlower2 = poseFactory.of(18, 50, 180);
+    private final Pose ForthfromFlower2 = poseFactory.of(13.5, 50, 180);
+
+
     private final Pose shootAgainStart = poseFactory.of(14, 50, 180);
     private final Pose shootAgain = poseFactory.of(54, 127.9024, 180);
     private final Pose parkStart = poseFactory.of(54, 127.9024, 180);
@@ -39,7 +45,7 @@ public class Paths1 {
     }
 
     public Path firstCycle() {
-        return Paths.line(start, firstCycle).linear(start, firstCycle);
+        return Paths.line(start, firstCycle).linear(start, firstCycle).with(Constants.foresightConfig.maxPathSpeed.at(0.4));
     }
 
     public Path firstShootForSecondTip() {
@@ -56,7 +62,7 @@ public class Paths1 {
         return Paths.line(back, forth).tangent();
     }
     public Path Back2() {
-        return Paths.line(forth, Back2).reverseTangent();
+        return Paths.line(forth, Back2).linear(forth, Back2);
     }
 
     public Path moveToFlower2() {
@@ -65,6 +71,12 @@ public class Paths1 {
 
     public Path getFlower2() {
         return Paths.line(moveToFlower2, getFlower2).tangent();
+    }
+    public Path Back3() {
+        return Paths.line(getFlower2, BackfromFlower2).reverseTangent();
+    }
+    public Path Forth3() {
+        return Paths.line(BackfromFlower2, ForthfromFlower2).tangent();
     }
 
     public Path shootAgain() {

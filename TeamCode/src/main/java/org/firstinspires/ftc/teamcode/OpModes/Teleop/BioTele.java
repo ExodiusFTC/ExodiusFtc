@@ -46,7 +46,7 @@ public class BioTele extends NextOpMode {
         robot.getPedro().follower().setPose(startingPose);
 
 
-        gp1.rightBumper().onTrue(robot.getIntake().run());
+        gp1.rightBumper().onTrue(robot.getIntake().runFasst());
         gp1.rightBumper().onFalse(robot.getIntake().stop());
 
         gp1.x().onTrue(robot.intakeUp());

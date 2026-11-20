@@ -42,9 +42,9 @@ public class TurretServos implements Mechanism {
     // ---- Auto-aim ----
     // Robot y >= splitY aims at the upper goal point, otherwise at the lower one (field inches).
     public static double splitY = 72.0;
-    public static double upperGoalX = 58.0;
-    public static double upperGoalY = 80.0;
-    public static double lowerGoalX = 58.0;
+    public static double upperGoalX = 61.0;
+    public static double upperGoalY = 82.0;
+    public static double lowerGoalX = 56.0;
     public static double lowerGoalY = 59.0;
     // +1 if a positive turret angle turns counter-clockwise (same direction as Pedro heading).
     // -1 if positive turret angle turns clockwise (this robot: clockwise increases the angle).

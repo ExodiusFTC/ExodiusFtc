@@ -21,10 +21,13 @@ public class Intake implements Mechanism {
         intakeMotor.setAnglePerCount(new Angle(DEG_PER_COUNT, Units.Degrees));
     }
     public Command run() {
-        return instant(() -> intakeMotor.setThrottle(-0.6)).requiring(intakeMotor);
+        return instant(() -> intakeMotor.setThrottle(-0.7)).requiring(intakeMotor);
     }
     public Command stop(){
         return instant(() -> intakeMotor.setThrottle(0.0)).requiring(intakeMotor);
+    }
+    public Command runFasst(){
+        return instant(() -> intakeMotor.setThrottle(-1)).requiring(intakeMotor);
     }
 
     public double getCurrentAngle() {
