@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.paths.HyperionPaths;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.paths.Paths1;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.mechanisms.TurretState;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import dev.nextftc.robot.Telemetry;
@@ -168,6 +169,7 @@ public class HyperionAuto extends NextOpMode {
 
     @Override
     public void end() {
+        TurretState.save(robot.getIntake().getActualAngle());   // hand the angle to teleop
         robot.getTurretServos().setManualPower(0);   // closed loop off, turret stops
     }
 }

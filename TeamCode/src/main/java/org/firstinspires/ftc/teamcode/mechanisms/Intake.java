@@ -41,6 +41,12 @@ public class Intake implements Mechanism {
         offset = currentAngle;
     }
 
+    /** Treat the turret's current physical position as the given angle (used to carry the angle between OpModes). */
+    public void setKnownAngle(double angle){
+        currentAngle = intakeMotor.getEncoderPosition().into(Units.Degrees);
+        offset = currentAngle - angle;
+    }
+
     public double getCurrentVel() {
         return currentVel;
     }

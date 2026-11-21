@@ -15,6 +15,7 @@ import com.pedropathing.math.Pose;
 import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.paths.Paths1;
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.mechanisms.TurretState;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import dev.nextftc.robot.Telemetry;
@@ -96,7 +97,7 @@ public class Auton1 extends NextOpMode {
     public void disabledPeriodic(){
         //robot.getPedro().follower().setPose(startingPose);
 
-       // robot.intakeUp().schedule();
+        // robot.intakeUp().schedule();
         // Zero the turret encoder wherever the turret sits during init (like BioTele does),
         // so place the turret facing straight forward before pressing start.
         //robot.getIntake().resetEncoder();
@@ -145,6 +146,7 @@ public class Auton1 extends NextOpMode {
 
     @Override
     public void end() {
+        TurretState.save(robot.getIntake().getActualAngle());   // hand the angle to teleop
         robot.getTurretServos().setManualPower(0);   // closed loop off, turret stops
     }
 }

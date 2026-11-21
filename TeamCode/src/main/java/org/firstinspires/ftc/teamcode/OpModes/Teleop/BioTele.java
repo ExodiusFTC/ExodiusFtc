@@ -8,6 +8,7 @@ import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.mechanisms.TurretState;
 import dev.nextftc.robot.Telemetry;
 import dev.nextftc.robot.opmode.NextOpMode;
 import dev.nextftc.robot.opmode.NextTeleop;
@@ -22,7 +23,7 @@ public class BioTele extends NextOpMode {
     public static Pose startingPose = new Pose(8, 137, Math.toRadians(180));
     public static double targetVel = 580;
 
-    public static double targetVel2 = -600;
+    public static double targetVel2 = -580;
     private final Robot robot;
     private boolean wasAiming = false;
     public BioTele(Robot robot){
@@ -34,7 +35,12 @@ public class BioTele extends NextOpMode {
         Scheduler.reset();
         robot.intakeUp();
 
-
+        // Carry the turret angle over from auton; fall back to zeroing if nothing was saved.
+        if (TurretState.hasSaved) {
+            robot.getIntake().setKnownAngle(TurretState.savedAngle);
+        } else {
+            robot.getIntake().resetEncoder();
+        }
     }
     @Override
     public void start() {
@@ -58,7 +64,6 @@ public class BioTele extends NextOpMode {
         gp1.leftBumper().onTrue(robot.getBlocker().unblock().with(robot.runIntake()));
         gp1.leftBumper().onFalse(robot.getBlocker().block().with(robot.getIntake().stop()));
         robot.intakeUp();
-        robot.getIntake().resetEncoder();
 
 
 
@@ -75,8 +80,13 @@ public class BioTele extends NextOpMode {
 
     @Override
     public void disabledPeriodic(){
-        robot.getIntake().resetEncoder();
+        // Hold gamepad 2 X during INIT to force a re-zero (turret must be facing straight forward).
+        if (gamepad2.x) {
+            TurretState.clear();
+            robot.getIntake().resetEncoder();
+        }
         robot.intakeUp();
+        Telemetry.log("Actual angle", robot.getIntake().getActualAngle());
     }
     @Override
     public void periodic(){
@@ -135,6 +145,6 @@ public class BioTele extends NextOpMode {
 
     @Override
     public void end(){
-
+        TurretState.save(robot.getIntake().getActualAngle());
     }
 }
