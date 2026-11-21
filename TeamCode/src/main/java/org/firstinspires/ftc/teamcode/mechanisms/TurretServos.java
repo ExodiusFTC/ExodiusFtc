@@ -42,8 +42,8 @@ public class TurretServos implements Mechanism {
     // ---- Auto-aim ----
     // Robot y >= splitY aims at the upper goal point, otherwise at the lower one (field inches).
     public static double splitY = 72.0;
-    public static double upperGoalX = 60.0;
-    public static double upperGoalY = 81.0;
+    public static double upperGoalX = 62.0;
+    public static double upperGoalY = 80.0;
     public static double lowerGoalX = 55.0;
     public static double lowerGoalY = 59.0;
     // +1 if a positive turret angle turns counter-clockwise (same direction as Pedro heading).
@@ -52,6 +52,11 @@ public class TurretServos implements Mechanism {
     // Turret encoder angle (deg) when the turret points straight out the front of the robot.
     // 0 if you zero the encoder with the turret facing forward.
     public static double turretZeroOffset = 0.0;
+
+    // Turret pivot position relative to the robot's tracked pose point, in inches.
+    // +forward = toward the front of the robot, +left = toward the robot's left.
+    public static double turretForwardOffset = 2.0;
+    public static double turretLeftOffset = 0.0;
 
     public double Pos1;
     public double targPos;
@@ -139,11 +144,15 @@ public class TurretServos implements Mechanism {
      * y >= splitY aims at (upperGoalX, upperGoalY), otherwise at (lowerGoalX, lowerGoalY).
      */
     public double calculateAimAngle(double x, double y, double heading) {
-        boolean upper = y >= splitY;
+        // Field position of the turret pivot, not of the robot's tracked point.
+        double turretX = x + turretForwardOffset * Math.cos(heading) - turretLeftOffset * Math.sin(heading);
+        double turretY = y + turretForwardOffset * Math.sin(heading) + turretLeftOffset * Math.cos(heading);
+
+        boolean upper = turretY >= splitY;
         aimGoalX = upper ? upperGoalX : lowerGoalX;
         aimGoalY = upper ? upperGoalY : lowerGoalY;
 
-        double fieldAngle = Math.atan2(aimGoalY - y, aimGoalX - x);
+        double fieldAngle = Math.atan2(aimGoalY - turretY, aimGoalX - turretX);
         aimFieldAngleDeg = Math.toDegrees(fieldAngle);
 
         // angle of the goal relative to the front of the robot (CCW positive)

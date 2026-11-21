@@ -14,6 +14,7 @@ import com.pedropathing.math.Pose;
 
 import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.paths.Paths1;
+import org.firstinspires.ftc.teamcode.PoseStorage;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanisms.TurretState;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
@@ -86,22 +87,11 @@ public class Auton1 extends NextOpMode {
                 robot.getBlocker().block().with(robot.intakeUp()),
                 follow(follower, paths.park())
 
-
-
-
-
                 // Add mechanism commands here.
         );
     }
     @Override
     public void disabledPeriodic(){
-        //robot.getPedro().follower().setPose(startingPose);
-
-        // robot.intakeUp().schedule();
-        // Zero the turret encoder wherever the turret sits during init (like BioTele does),
-        // so place the turret facing straight forward before pressing start.
-        //robot.getIntake().resetEncoder();
-
         // Use the follower pose directly: the static botPose is still null until periodic() runs.
         Pose pose = robot.getPedro().follower().pose();
         robot.getTurretServos().setCurrentPos(robot.getIntake().getActualAngle());
@@ -110,7 +100,7 @@ public class Auton1 extends NextOpMode {
     }
     @Override
     public void start() {
-        //robot.getIntake().resetEncoder();
+        PoseStorage.saveAlliance(true);
 
         robot.getShooter().setTargetVelocity(targetVel);
         robot.getShooter().setTargetVelocity2(targetVel2);
@@ -120,19 +110,19 @@ public class Auton1 extends NextOpMode {
         follower.setPose(paths.startPose());
 
         autoRoutine(follower).schedule();
-
-
     }
 
     @Override
     public void periodic() {
         botPose = robot.getPedro().follower().pose();
+        PoseStorage.savePose(botPose);   // always holds the latest pose for teleop
 
         robot.getShooter().setTargetVelocity(targetVel);
         robot.getShooter().setTargetVelocity2(targetVel2);
 
         // Turret auto-aim: feed in the current angle first so the aim calc uses this loop's reading.
         double actualAngle = robot.getIntake().getActualAngle();
+        TurretState.save(actualAngle);   // keep latest angle stored every loop (same as the pose)
         robot.getTurretServos().setCurrentPos(actualAngle);
         double aimAngle = robot.getTurretServos().calculateAimAngle(botPose.x(), botPose.y(), botPose.heading());
         robot.getTurretServos().setTargetPos(aimAngle);
@@ -146,7 +136,7 @@ public class Auton1 extends NextOpMode {
 
     @Override
     public void end() {
-        TurretState.save(robot.getIntake().getActualAngle());   // hand the angle to teleop
         robot.getTurretServos().setManualPower(0);   // closed loop off, turret stops
+        // pose and turret angle are both already saved every loop in periodic()
     }
 }

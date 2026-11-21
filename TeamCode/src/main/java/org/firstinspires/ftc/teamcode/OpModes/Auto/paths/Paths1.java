@@ -32,13 +32,13 @@ public class Paths1 {
     private final Pose moveToFlower2Control1 = poseFactory.of(15, 96, 0);
     private final Pose getFlower2 = poseFactory.of(13.5, 50, 180);
     private final Pose BackfromFlower2 = poseFactory.of(18, 50, 180);
-    private final Pose ForthfromFlower2 = poseFactory.of(13.5, 50, 180);
+    private final Pose ForthfromFlower2 = poseFactory.of(13.8, 50, 180);
 
 
-    private final Pose shootAgainStart = poseFactory.of(14, 50, 180);
+    private final Pose shootAgainStart = poseFactory.of(13.8, 50, 180);
     private final Pose shootAgain = poseFactory.of(54, 127.9024, 180);
     private final Pose parkStart = poseFactory.of(54, 127.9024, 180);
-    private final Pose park = poseFactory.of(11, 116.9113, 180);
+    private final Pose park = poseFactory.of(11, 116.9113, 90);
 
     public Pose startPose() {
         return start;
@@ -49,7 +49,7 @@ public class Paths1 {
     }
 
     public Path firstShootForSecondTip() {
-        return Paths.curve(firstShootForSecondTipStart, firstShootForSecondTipControl1, firstShootForSecondTipControl2, firstShootForSecondTip).linear(firstShootForSecondTipStart, firstShootForSecondTip);
+        return Paths.curve(firstShootForSecondTipStart, firstShootForSecondTipControl1, firstShootForSecondTipControl2, firstShootForSecondTip).linear(firstShootForSecondTipStart, firstShootForSecondTip).with(Constants.foresightConfig.timeoutConstraint.at(5.0));
     }
 
     public Path getFlowerOne() {

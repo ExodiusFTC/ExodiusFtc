@@ -29,6 +29,9 @@ public class Intake implements Mechanism {
     public Command runFasst(){
         return instant(() -> intakeMotor.setThrottle(-1)).requiring(intakeMotor);
     }
+    public Command reverse(){
+        return instant(() -> intakeMotor.setThrottle(1)).requiring(intakeMotor);
+    }
 
     public double getCurrentAngle() {
         return currentAngle;
