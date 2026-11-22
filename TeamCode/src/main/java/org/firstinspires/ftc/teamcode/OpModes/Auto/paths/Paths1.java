@@ -19,26 +19,26 @@ public class Paths1 {
     private final Pose firstShootForSecondTip = poseFactory.of(49, 121, 90);
     private final Pose firstShootForSecondTipControl1 = poseFactory.of(24, 76, 0);
     private final Pose firstShootForSecondTipControl2 = poseFactory.of(33, 116, 0);
-    private final Pose getFlowerOne = poseFactory.of(49, 129, 90);
+    private final Pose getFlowerOne = poseFactory.of(49, 127.5, 90);
     private final Pose back = poseFactory.of(49, 125, 90);
-    private final Pose forth = poseFactory.of(49, 129, 90);
+    private final Pose forth = poseFactory.of(49, 127.5, 90);
 
-    private final Pose Back2 = poseFactory.of(53, 125, 90);
+    private final Pose Back2 = poseFactory.of(49, 123, 90);
 
 
 
-    private final Pose moveToFlower2Start = poseFactory.of(52, 123, 180);
+    private final Pose moveToFlower2Start = poseFactory.of(49, 123, 180);
     private final Pose moveToFlower2 = poseFactory.of(20, 50, 180);
     private final Pose moveToFlower2Control1 = poseFactory.of(15, 96, 0);
-    private final Pose getFlower2 = poseFactory.of(13.5, 50, 180);
+    private final Pose getFlower2 = poseFactory.of(14.2, 50, 180);
     private final Pose BackfromFlower2 = poseFactory.of(18, 50, 180);
-    private final Pose ForthfromFlower2 = poseFactory.of(13.8, 50, 180);
+    private final Pose ForthfromFlower2 = poseFactory.of(14.2, 50, 180);
 
 
     private final Pose shootAgainStart = poseFactory.of(13.8, 50, 180);
     private final Pose shootAgain = poseFactory.of(54, 127.9024, 180);
     private final Pose parkStart = poseFactory.of(54, 127.9024, 180);
-    private final Pose park = poseFactory.of(11, 116.9113, 90);
+    private final Pose park = poseFactory.of(11, 110, 90);
 
     public Pose startPose() {
         return start;

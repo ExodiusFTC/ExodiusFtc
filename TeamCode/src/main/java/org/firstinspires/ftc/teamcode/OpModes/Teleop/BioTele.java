@@ -22,7 +22,7 @@ import dev.nextftc.robot.triggers.Trigger;
 public class BioTele extends NextOpMode {
     public static Pose botPose;
     public static Pose defaultTelePose = new Pose(72,72,Math.toRadians(90));
-    public static Pose startingPose = new Pose(8, 137, Math.toRadians(180));
+    public static Pose startingPose = new Pose(10, 10, Math.toRadians(180));
     public static double targetVel = 580;
 
     public static double targetVel2 = -580;
@@ -37,7 +37,7 @@ public class BioTele extends NextOpMode {
         telemetry.setMsTransmissionInterval(10);
         Telemetry.addBackend(FtcDashboard.getInstance().getTelemetry());
         Scheduler.reset();
-        robot.intakeUp();
+        robot.intakeUp().schedule();
 
         // Load the pose auto saved; falls back to startingPose if auto didn't run (never null).
         loadedPose = PoseStorage.loadPose(startingPose);
